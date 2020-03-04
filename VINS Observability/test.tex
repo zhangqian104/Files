@@ -1,0 +1,526 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage[a4paper,left=10mm,right=10mm,top=15mm,bottom=15mm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb}
+\usepackage{amsmath}
+\usepackage{biblatex}
+\usepackage{hyperref}
+
+
+\title{SLAM系统可观性和一致性分析}
+\author{张谦}
+\date{2020年2月23日}
+\begin{document}
+\maketitle
+\section{无偏估计、有效性和一致性}
+现实中常常有这样的问题，比如，想知道全体女性的身高
+均值$\mu$，但是没有办法把每个女性都进行测量，只有抽样
+一些女性来估计全体女性的身高：
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=10cm]{figure1.jpg}
+    \caption{身高高斯分布示意图}
+\end{figure}
+
+那么根据抽样数据怎么进行推断？什么样的推断方法才称为“好”？
+\subsection{无偏性}
+比如说我们采样到的女性身高分别为：
+\begin{equation}
+\{x_1,x_2,\dots,x_n\}
+\end{equation}
+那么：
+\begin{equation}
+\bar{X}=\frac{x_1+x_2+\dots+x_n}{n}
+\end{equation}
+是对$\mu$不错的一个估计，为什么？以为它是无偏估计。\par
+首先，真正的全体女性的身高均值$\mu$，我们是不知道的，只有上帝才知道，在
+图中就画为虚线，通过采样计算出$\bar{X}$会发现，不同采样得到的$\bar{X}$是
+围绕$\mu$左右波动的。这有点像打靶，只要命中在靶心周围，还算不错的成绩，这就是无偏的。
+\begin{figure}[!hbp]
+    \centering
+    \includegraphics[width=10cm]{figure2.jpg}
+    \caption{采样计算$\bar{X}$}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=10cm]{figure3.jpg}
+    \caption{打靶例子}
+\end{figure}
+如果用一下式子去估计总体方差$\sigma^2$:
+\begin{equation}
+    S^2=\frac{1}{n}\sum\limits_{i-1}^n{(X_i-\bar{X})^2}
+\end{equation}
+会偏离靶心并产生偏差，这就是有偏的，这个偏差为$\frac{1}{n}\sigma^2$，
+这种偏差就像瞄准镜歪了，属于系统误差，就此而言，无偏估计要好于有偏估计。
+\begin{figure}
+    \centering
+    \includegraphics[width=15cm]{figure4.jpg}
+    \caption{系统偏差}
+\end{figure}
+
+\subsection{有效性}
+打靶的时候，右边的成绩肯定更优秀：
+\begin{figure}[!tbp]
+    \centering
+    \includegraphics[width=15cm]{figure6.jpg}
+    \caption{有效性示意图}
+\end{figure}
+进行估计的时候，也是估计量越靠近目标，效果越好，这个靠近可以用方差来衡量。
+另外，有效估计和偏差性是不想关的。
+\begin{figure}[!tbp]
+    \centering
+    \includegraphics[width=15cm]{figure7.jpg}
+\end{figure}
+\par
+举个例子，从$N(\mu,\sigma^2)$中抽出10个样本：
+\begin{equation}
+    \{x_1,x_2,\dots,x_n\}
+\end{equation}
+下面两个都是无偏估计量：
+\begin{equation}
+    T_1=\frac{x_1+x_3+2x_{10}}{4}, T_2=\frac{1}{10}\sum\limits_{i=1}^{10}{x_i}
+\end{equation}
+但是后者比前者方差小，后者更有效。并且显示中不一定非要选无偏估计量，比如:
+\begin{figure}[!tbp]
+    \centering
+    \includegraphics[width=15cm]{figure8.jpg}
+\end{figure}
+如果能接受点误差，选择右边这个估计量更好。
+
+\subsection{一致性}
+之前说了，如果用以下式子去估计方差$\sigma^2$:
+\begin{equation}
+    S^2=\frac{1}{n}\sum\limits_{i-1}^n{(X_i-\bar{X})^2}
+\end{equation}
+会有一个偏差$\frac{1}{n}\sigma^2$,可以看到，随着采样个数$n$的增加，
+这个偏差会越来越小。那么这个估计量就是“一致的”。如果样本数量够多，其实
+这种“有偏”但是“一致'的估计量也是可以选的。
+\subsection{总结}
+在共视的Mapping中，由于fix历史帧，优化滑窗内的关键帧，导致的“有偏”估计，但是由于
+前端vio能够提供无偏且一致的初值，会提升后端共视非线性优化的“有效性”，而且最终使得
+SLAM能有一个比较精确的输出。
+
+\section{非线性系统可观性分析}
+\subsection{Lie Derivative}
+在介绍Lie Derivative之前，先需要以下一些概念。\par
+
+（1）向量函数$f(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}^n$（从$\textbf{x}\in\mathbb{R}^n$
+映射到$f(\textbf{x})\in\mathbb{R}^n$），叫做$\mathbb{R}^n$里的向量场（Vector field）。
+如果进一步，向量函数$f$具有连续偏导，而且是任意阶的偏导，那么我们说$f$是光滑向量场
+（Smooth Vector field）。\par
+
+（2）光滑标量函数$h(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}$（从$\textbf{x}\in\mathbb{R}^n$映射到
+$h(\textbf{x})\in\mathbb{R}$的函数）的Gradient由一个行向量$\nabla{h}=\frac{\partial{h}}{\partial{\textbf{x}}}$
+表示，其中$\textbf{x}\in\mathbb{R}^n$。所以我们要记住，Gradient是标量对向量的求导，
+其结果是个行向量。光滑向量场$f(\textbf{x})$的Jacobian由一个$n\times{n}$的矩阵$\nabla{f}=\frac{\partial{f}}{\partial{\textbf{x}}}$,
+其中矩阵的第一行就是$\nabla{f_1}=\frac{\partial{f_1}}{\partial{\textbf{x}}}$，就是刚刚定义的光滑标量函数$f_1$
+（列向量$f$的第一个元素）的Gradient，而我们知道Gradient是行向量。以此类推Jacobian的第$i$行
+应该为$\nabla{f_i}=\frac{\partial{f_i}}{\partial{\textbf{x}}}$。那么基于以上几个定义，我们就可以用来定义
+Lie Derivative。\par
+
+（3）Lie Derivative的定义：光滑标量函数$h(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}$相对于光滑向量场
+$f(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}$的Lie Derivative由一个标量函数
+$L_\textbf{f}h=\nabla{h}\textbf{f}=\frac{\partial{h}}{\partial{\textbf{x}}}\textbf{f}$表示，
+其中$\frac{\partial{h}}{\partial{\textbf{x}}}$就是标量函数$h(\textbf{x})$的Gradient，
+是个行向量。行向量$\frac{\partial{h}}{\partial{\textbf{x}}}$乘以向量场$f(\textbf{x})\in\mathbb{R}^n$,
+其结果正好是个标量，所以$L_\textbf{f}h=\nabla{h}\textbf{f}=\frac{\partial{h}}{\partial{\textbf{x}}}f$
+是个标量。\par
+
+（4）如果$g(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}^n$是另一个向量场，由于刚刚计算的Lie Derivative：$L_\textbf{f}h$是个标量，
+它又可以跟$g(\textbf{x})$算出一个Lie Derivative，表示为
+$L_\textbf{g}L_\textbf{f}h=L_\textbf{g}(L_\textbf{f}h)=\nabla(L_\textbf{f}h)g=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}g
+=\frac{\partial({\frac{\partial{h}}{\partial{\textbf{x}}}f)}}{\partial{\textbf{x}}}g$，
+当然同样地，算出来$L_\textbf{g}L_\textbf{f}h$的结果依然是个标量。以此类推，可以一直搞下去。
+于是我们有标量行数$h(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}$的0阶Lie Derivative，表示为
+$L_\textbf{f}^0h=h$，是它本身。标量函数$h(\textbf{x}):\mathbb{R}^n\rightarrow\mathbb{R}$的第$i$阶
+Lie Derivative为$L_\textbf{f}^ih=L_\textbf{f}(L_\textbf{f}^{i-1}h)=\nabla(L_{\textbf{f}}^{i-1}h)f=\frac{\partial(L_{\textbf{f}}^{i-1}h)}{\partial{\textbf{x}}}\textbf{f}$。\par
+（5）总结一下，Lie Derivative与一般的Derivate的区别是，Lie Derivative是定义在两个函数$h$和$f$之间的，
+它俩都是向量$\textbf{x}$的函数，标量行数$h$对$\textbf{x}$的Gradient乘以$f(\textbf{x})$，它们通过共同的
+$\textbf{x}$联系起来的。一般的Derivative是某个函数对$\textbf{x}$定义的。举个例子，对于单输出非线性系统：
+\begin{equation}
+\begin{aligned}
+    &\dot{\textbf{x}}=f(\textbf{x})\\
+    &y=h(\textbf{x})
+\end{aligned}
+\end{equation}
+我们有$\dot{y}=\frac{\partial{h}}{\partial{\textbf{x}}}\dot{\textbf{x}}=\frac{\partial{h}}{\partial{\textbf{x}}}f(\textbf{x})=L_\textbf{f}h$，
+$\ddot{y}=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}\dot{\textbf{x}}=\frac{\partial(L_{\textbf{f}}h)}{\partial{\textbf{x}}}f(\textbf{x})=L_{\textbf{f}}^{2}h$
+
+\subsection{非线性系统的Lie Derivative和可观矩阵}
+考虑连续非线性系统：
+\begin{equation}\label{eqs:nonlinearsys1}
+    \begin{aligned}
+    &\dot{\textbf{x}}=\textbf{f}_0(\textbf{x})+\sum\limits_{i=1}^{l}\textbf{f}_{i}(\textbf{x})\textbf{u}_i\\
+    &\textbf{z}=\textbf{h}(\textbf{x})
+    \end{aligned}
+\end{equation}
+其中控制输入$\textbf{u}=\left[u_1,u_2,\ldots, u_l\right]^T$，状态量$\textbf{x}=\left[x_1,x_2.\ldots,x_m\right]^T$，
+状态过程模型表示为向量函数$\textbf{f}_i,i=0,1,\ldots,l$。\par
+
+为了分析系统的可观性，以及在现有的测量下状态量各个方向的可观性，我们计算系统的Lie Derivative。定义测量函数$\textbf{h}$的零阶Lie Derivative
+为其自身：
+\begin{equation}
+    \mathcal{L}^0\textbf{h}=\textbf{h}(\textbf{x})
+\end{equation}
+由Lie Derivative的定义，测量函数$\textbf{h}$不同阶的Lie Derivative由$\mathcal{L}^0\textbf{h}$循环计算得到。
+其中，由第$i$阶Lie Derivative，$\mathcal{L}^i\textbf{h}$和状态过程函数$\textbf{f}_j$可计算得到测量函数的
+第$i+1$阶Lie Derivative $\mathcal{L}_{\textbf{f}_j}^{i+1}\textbf{h}$：
+\begin{equation}
+    \mathcal{L}_{\textbf{f}_j}^{i+1}\textbf{h}=\nabla\mathcal{L}^i\textbf{h}\cdot\textbf{f}_j
+\end{equation}
+其中$\nabla\mathcal{L}^i\textbf{h}$为第$i$阶Lie Derivative的生成空间：
+\begin{equation}
+    \nabla\mathcal{L}^i\textbf{h}=\left[\frac{\partial\mathcal{L}^i\textbf{h}}{\partial{x_1}},
+    \frac{\partial\mathcal{L}^i\textbf{h}}{\partial{x_2}},\dots,
+    \frac{\partial\mathcal{L}^i\textbf{h}}{\partial{x_m}}
+    \right]
+\end{equation}
+\par
+
+由给定的观测信息，为了分析在哪些方向上是可观的，我们检查测量函数各阶Lie Derivative的生成空间，且定义可观矩阵为
+\begin{equation}
+    \mathcal{O}=
+    \left[ \begin{array}{c}
+        \nabla\mathcal{L}^0\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i}^{1}\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i\textbf{f}_j}^{2}\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i\textbf{f}_j\textbf{f}_k}^{3}\textbf{h}\\
+        \vdots
+    \end{array}\right]
+\end{equation}
+其中$i,j,k=1,2,\dots,l$。为了证明系统是可观的，需要证明$\mathcal{O}$的若干行组成的子矩阵是列满秩的
+（full colum rank）。相反的，为了证明系统是非完全可观的，且找出不可观的方向，则需要证明：
+（a）矩阵$\mathcal{O}$中的无限多行，均可表示为矩阵$\mathcal{O}^\prime$行向量的线性组合，其中$\mathcal{O}\prime$
+的行向量来自于$\mathcal{O}$;
+（b）求解矩阵$\mathcal{O}\prime$的零空间，即可得到系统不可观的方向。尽管条件（b）可以直接求解得到，但是条件（a）很难
+找到。\par
+
+\subsection{非线性系统可观性分析}
+通过上面介绍可知，要分析非线性系统的可观性，是非常有挑战的，因为要计算具有无限行组成的可观矩阵的零空间。
+但是论文中提出了一种方法，使可观性分析变得容易，将可观矩阵分解为两个矩阵相乘：一个满秩的无限行矩阵和一个
+非满秩的有限行矩阵。下面将通过计算一系列关于状态变量$\textbf{x}$的基函数，来达到分解可观矩阵的目的。
+\par
+首先给出定理，
+\par
+\textbf{Theorem1:} 假设存在非线性变换$\mathbf{\beta(x)}=\left[\mathbf{\beta_1(x)}^T,\dots,\mathbf{\beta_t(x)}^T\right]^T$，
+这些基均是关于状态变量$\textbf{x}$的函数，总共有$t$个，且满足如下条件：
+\par
+（C1）$\mathbf{\beta_1(x)}=\mathbf{h(x)}$；
+\par
+（C2）$\frac{\partial{\mathbf{\beta}}}{\partial{\textbf{x}}}\cdot\textbf{f}_i(\textbf{x}),i=0,1,\dots,l$是关于$\mathbf{\beta}$的函数；
+\par
+（C3）定义一个可观的非线性系统：
+\begin{equation}\label{eqs:nonlinearsys2}
+    \left\{ \begin{array}{l}
+        \dot{\mathbf{\beta}}=\textbf{g}_0(\mathbf{\beta})+\sum_{i=1}^{l}{\textbf{g}_i(\mathbf{\beta})\textbf{u}_i}\\
+        \textbf{z}=\textbf{h}=\mathbf{\beta}_1
+    \end{array}\right.
+\end{equation}
+其中，$\textbf{g}_i(\mathbf{\beta})=\frac{\partial{\mathbf{\beta}}}{\partial{\textbf{x}}}\textbf{f}_i(\textbf{x}),i=0,1,\dots,l$。
+\par
+根据以上假设条件，则有以下两条结论：
+\par
+（$\romannumeral1$）可观矩阵$\mathcal{O}$可被分解为：
+\begin{equation}
+    \mathcal{O}=\Xi\cdot\mathbf{B}
+\end{equation}
+其中$\Xi$为系统（\ref{eqs:nonlinearsys2}）的可观矩阵，且$\mathbf{B}\triangleq\frac{\partial{\mathbf{\beta}}}{\partial{\textbf{x}}}$。
+\par
+（$\romannumeral2$）$null(\mathcal{O})=null(\mathbf{B})$
+\par
+证明结论（$\romannumeral1$）：
+根据链式法则，Lie Derivative $\nabla\mathcal{L}^i\textbf{h}$的生成空间可表示为，
+\begin{equation}
+    \nabla\mathcal{L}^i\textbf{h}=\frac{\partial\mathcal{L}^i\textbf{h}}{\partial{\textbf{x}}}
+    =\frac{\partial\mathcal{L}^i\textbf{h}}{\partial\mathcal{\mathbf{\beta}}}\frac{\partial\mathbf{\beta}}{\partial{\textbf{x}}}
+\end{equation}
+因此，系统（\ref{eqs:nonlinearsys1}）的可观矩阵$\mathcal{O}$可被分解为：
+\begin{equation}
+    \mathcal{O}
+    =\left[ \begin{array}{c}
+        \nabla\mathcal{L}^0\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i}^{1}\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i\textbf{f}_j}^{2}\textbf{h}\\
+        \nabla\mathcal{L}_{\textbf{f}_i\textbf{f}_j\textbf{f}_k}^{3}\textbf{h}\\
+        \vdots
+    \end{array}\right]
+    =\left[ \begin{array}{c}
+        \frac{\partial\mathcal{L}^0\textbf{h}}{\partial\mathbf{\beta}}\\
+        \frac{\partial\mathcal{L}^1_{\textbf{f}_i}\textbf{h}}{\partial\mathbf{\beta}}\\
+        \frac{\partial\mathcal{L}^2_{\textbf{f}_i\textbf{f}_j}\textbf{h}}{\partial\mathbf{\beta}}\\
+        \frac{\partial\mathcal{L}^3_{\textbf{f}_i\textbf{f}_j\textbf{f}_k}\textbf{h}}{\partial\mathbf{\beta}}\\
+        \vdots
+    \end{array}\right]\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}
+    =\Xi\cdot\textbf{B}
+\end{equation}
+接下来证明矩阵$\Xi$是系统（\ref{eqs:nonlinearsys2}）的可观矩阵。
+\par
+为区分系统（\ref{eqs:nonlinearsys1}）和系统（\ref{eqs:nonlinearsys2}）的各阶Lie Derivative，
+利用符号$\mathcal{J}$表示系统（\ref{eqs:nonlinearsys2}）的Lie Derivative。
+系统（\ref{eqs:nonlinearsys2}）的零阶Lie Derivative的生成空间表示为：
+\begin{equation}
+    \nabla\mathcal{J}^0\textbf{h}=\frac{\partial\textbf{h}}{\partial\mathbf{\beta}}
+    =\frac{\partial\mathcal{L}^0\textbf{h}}{\partial\mathbf{\beta}}
+\end{equation}
+该零阶生成空间即为矩阵$\Xi$的第一行块矩阵。
+\par
+利用$\nabla\mathcal{J}^i\textbf{h}=\frac{\partial\mathcal{L}^i\textbf{h}}{\partial\mathbf{\beta}}$表示矩阵$\Xi$
+的$i$行Lie Derivative的生成空间，则第$i+1$行的生成空间$\nabla\mathcal{J}_{\textbf{g}_j}^{i+1}\textbf{h}$（状态过程函数为$\textbf{g}_j$）
+可表示为
+\begin{equation}
+    \begin{array}{c}
+        \nabla\mathcal{J}_{\textbf{g}_j}^{i+1}\textbf{h}=\frac{\partial\mathcal{J}_{\textbf{g}_j}^{i+1}\textbf{h}}{\partial\mathbf{\beta}}
+        =\frac{\partial\nabla\mathcal{J}^i\textbf{h}\cdot\textbf{g}_j}{\partial\mathbf{\beta}}
+        =\frac{\partial({\frac{\partial\mathcal{L}^i\textbf{h}}{\partial\mathbf{\beta}}}\cdot{{\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}}{\textbf{f}_j}(\textbf{x})})}{\partial\mathbf{\beta}}
+        =\frac{\partial({\frac{\partial\mathcal{L}^i\textbf{h}}{\partial{\textbf{x}}}}\cdot{\textbf{f}_j(\textbf{x})})}{\partial\mathbf{\beta}}
+        =\frac{\partial\mathcal{L}_{\textbf{f}_j}^{i+1}\textbf{h}}{\partial\mathbf{\beta}}
+    \end{array}
+\end{equation}
+因此，矩阵$\Xi$的每一行矩阵块，为系统（\ref{eqs:nonlinearsys2}）的各阶Lie Derivative的生成空间，即矩阵$\Xi$是系统（\ref{eqs:nonlinearsys2}）的可观矩阵。
+\par
+证明结论（\romannumeral2）：由于$\mathcal{O}=\Xi\textbf{B}$，则有$null(\mathcal{O})=null(\textbf{B})+null(\Xi)\cap{range(\textbf{B})}$\cite{Meyer2000}，
+另外，由于假设条件（C3）系统（\ref{eqs:nonlinearsys2}）是可观的，即可观矩阵$\Xi$为列满秩（full column rank），
+则有$null(\mathcal{O})=null(\textbf{B})$。至此，由假设条件（C1）、（C2）和（C3）得到的结论（\romannumeral1）和（\romannumeral2）证毕。
+\par
+由\textbf{Theorem1}可知，为了分析一个系统的不可观方向，首先需要找到一些基函数（basis functions）满足条件（C1）和（C2），并且需要证明
+矩阵$\Xi$是列满秩(full column rank)，即满足条件（C3）。当着三个条件满足后，则系统（\ref{eqs:nonlinearsys1}）的不可观方向分析转换成求解
+矩阵$\textbf{B}$的零空间。由于矩阵$\textbf{B}_I$是有限维的，因此求解零空间很容易。
+
+\section{VI-SLAM系统可观性分析}
+\subsection{系统概述}
+在该系统中，四元数表示旋转采用JPL形式。坐标系约定：全局坐标系用$G$表示，Camera坐标系用$C$表示，
+IMU坐标系用$I$表示，地图点用$f$表示；相机、IMU和地图点表示在某个坐标系下，则该坐标系符号写在对应变量符号的左上角，
+变量标识写在变量符号的右下角，例如$\sideset{^G}{}{\mathop{\mathbf{p}_{I}}}$表示IMU系（body系）原点在全局坐标系中的位置（平移），
+$\sideset{^G}{}{\mathop{\textbf{v}_{I}}}$表示IMU系在全局坐标系下的速度，$\sideset{^I}{}{\mathop{\textbf{q}_{G}}}$表示从全局坐标系
+旋转到IMU系的单位四元数，由于采用JPL形式，旋转均是由$G$系到$I$系旋转，与Hamilton表示方式相反；$\sideset{^G}{}{\mathop{\textbf{p}_{f_i}}}$
+表示第$i$个地图点在$G$系下的坐标。
+\par
+状态变量包含位姿、速度、Bias和地图点：
+\begin{equation}
+    \textbf{x}=\left[\sideset{^I}{}{\mathop{\textbf{q}_{G}^{T}}},
+    \sideset{}{}{\mathop{\textbf{b}_{g}^{T}}},
+    \sideset{^G}{}{\mathop{\textbf{v}_{I}^{T}}},
+    \sideset{}{}{\mathop{\textbf{b}_{a}^{T}}},
+    \sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}|
+    \sideset{^G}{}{\mathop{\textbf{p}_{f_1}^{T}}},
+    \dots,
+    \sideset{^G}{}{\mathop{\textbf{p}_{f_N}^{T}}}
+    \right]^T
+    =\left[\textbf{x}_{s}^{T} | \textbf{x}_{m}^{T}\right]^T
+\end{equation}
+其中$\textbf{x}_{s}^{T}$和$\textbf{x}_{m}^{T}$分别表示$16\times 1$维传感器状态和$3N\times 1$维地图点状态。
+\par
+连续系统状态模型：
+\begin{equation}
+    \sideset{^I}{}{\mathop{\dot{\mathbf{q}}_{G}(t)}}=\frac{1}{2}\mathbf{\Omega}(\sideset{^I}{}{\mathop{\omega(t)}})\sideset{^I}{}{\mathop{\textbf{q}_{G}(t)}}
+\end{equation}
+\begin{equation}
+    \sideset{^G}{}{\mathop{\dot{\mathbf{p}}_{I}(t)}}=\sideset{^G}{}{\mathop{\textbf{v}_{I}(t)}}
+\end{equation}
+\begin{equation}
+    \sideset{^G}{}{\mathop{\dot{\mathbf{v}}_{I}(t)}}=\sideset{^G}{}{\mathop{\textbf{a}_{I}(t)}}
+\end{equation}
+\begin{equation}
+    \dot{\mathbf{b}}_{g}(t)=\textbf{n}_{wg}(t)
+\end{equation}
+\begin{equation}
+    \dot{\mathbf{b}}_{a}(t)=\textbf{n}_{wa}(t)
+\end{equation}
+\begin{equation}
+    \sideset{^G}{}{\mathop{\dot{\mathbf{p}}_{f_i}(t)}}=\textbf{0}_{3\times 1},i=1,\dots,N
+\end{equation}
+其中，
+\begin{equation}
+    \Omega(\omega)=\left[\begin{array}{cc}
+        -\lfloor{\mathbf{\omega}}\rfloor_{\times} &\mathbf{\omega}\\
+        -\mathbf{\omega}^T &\textbf{0}
+    \end{array}\right]
+\end{equation}
+\begin{equation}
+    \lfloor{\mathbf{\omega}}\rfloor_{\times}=\triangleq 
+    \left[\begin{array}{ccc}
+        0 &-\omega_3 &\omega_2\\
+        \omega_3 &0 &-\omega_1\\
+        -\omega_2 &\omega_1 &0
+    \end{array}\right]
+\end{equation}
+\par
+陀螺仪测量$\sideset{^I}{}{\mathop{\mathbf{\omega}_m}}$和加速度计测量$\sideset{^I}{}{\mathop{\mathbf{a}_m}}$模型为：
+\begin{equation}
+    \sideset{^I}{}{\mathop{\mathbf{\omega}_{m}(t)}}=\sideset{^I}{}{\mathop{\mathbf{\omega}(t)}}
+    +\textbf{b}_{g}(t)+\textbf{n}_{g}(t)
+\end{equation}
+\begin{equation}
+    \sideset{^I}{}{\mathop{\mathbf{a}_{m}(t)}}=\textbf{C}(\sideset{^I}{}{\mathop{\mathbf{q}_{G}(t)}})
+    (\sideset{^G}{}{\mathop{\mathbf{a}_{I}(t)}}-\sideset{^G}{}{\mathop{\mathbf{g}}})
+    +\textbf{b}_{a}(t)+\textbf{n}_{a}(t)
+\end{equation}
+其中$\textbf{C}(\mathbf{q})$表示四元数对应的选择矩阵。
+\par
+对于上述连续状态模型，在当前时刻的估计量处线性展开，并求期望，得到状态估计的传递模型：
+\begin{equation}\label{eqs:sysmodel21}
+    \sideset{^I}{}{\mathop{\dot{\hat{\mathbf{q}}}_{G}(t)}}=\frac{1}{2}\mathbf{\Omega}(\sideset{^I}{}{\mathop{\hat{\omega}(t)}})\sideset{^I}{}{\mathop{\hat{\mathbf{q}}_{G}(t)}}
+\end{equation}
+\begin{equation}\label{eqs:sysmodel22}
+    \sideset{^G}{}{\mathop{\dot{\hat{\mathbf{p}}}_{I}(t)}}=\sideset{^G}{}{\mathop{\hat{\mathbf{v}}_{I}(t)}}
+\end{equation}
+\begin{equation}\label{eqs:sysmodel23}
+    \sideset{^G}{}{\mathop{\dot{\hat{\mathbf{v}}}_{I}(t)}}=\textbf{C}^{T}(\sideset{^I}{}{\mathop{\hat{\mathbf{q}}_{G}(t)}})
+    \sideset{^I}{}{\mathop{\hat{\mathbf{a}}(t)}}+\sideset{^G}{}{\mathop{\mathbf{g}}}
+\end{equation}
+\begin{equation}\label{eqs:sysmodel24}
+    \dot{\mathbf{b}}_{g}(t)=\textbf{0}_{3\times 1}
+\end{equation}
+\begin{equation}\label{eqs:sysmodel25}
+    \dot{\mathbf{b}}_{a}(t)=\textbf{0}_{3\times 1}
+\end{equation}
+\begin{equation}\label{eqs:sysmodel26}
+    \sideset{^G}{}{\mathop{\dot{\hat{\mathbf{p}}}_{f_i}(t)}}=\textbf{0}_{3\times 1},i=1,\dots,N
+\end{equation}
+其中$\sideset{^I}{}{\mathop{\hat{\mathbf{a}}(t)}}=\sideset{^I}{}{\mathop{\mathbf{a}_{m}(t)}}-\hat{\mathbf{b}}_{a}(t)$,
+$\sideset{^I}{}{\mathop{\hat{\mathbf{\omega}}(t)}}=\sideset{^I}{}{\mathop{\mathbf{\omega}_{m}(t)}}-\hat{\mathbf{b}}_{g}(t)$
+\par
+根据误差状态（error state）的定义$\tilde{\mathbf{x}}=\mathbf{x}-\hat{\mathbf{x}}$有：
+\begin{equation}
+    \tilde{\mathbf{x}}=\left[\sideset{^I}{}{\mathop{\delta{\mathbf{\theta}}_{G}^{T}}},
+    \sideset{}{}{\mathop{\tilde{\mathbf{b}}_{g}^{T}}},
+    \sideset{^G}{}{\mathop{\tilde{\textbf{v}}_{I}^{T}}},
+    \sideset{}{}{\mathop{\tilde{\textbf{b}}_{a}^{T}}},
+    \sideset{^G}{}{\mathop{\tilde{\textbf{p}}_{I}^{T}}}|
+    \sideset{^G}{}{\mathop{\tilde{\textbf{p}}_{f_1}^{T}}},
+    \dots,
+    \sideset{^G}{}{\mathop{\tilde{\textbf{p}}_{f_N}^{T}}}
+    \right]^T
+    =\left[\tilde{\textbf{x}}_{s}^{T} | \tilde{\textbf{x}}_{m}^{T}\right]^T
+\end{equation}
+则有线性连续误差状态方程，
+\begin{equation}
+    \dot{\tilde{\mathbf{x}}}=\left[\begin{array}{cc}
+        \textbf{F}_{s} &\textbf{0}_{15\times 3N}\\
+        \textbf{0}_{3N\times 15} &\textbf{0}_{3N}
+    \end{array}\right]\tilde{\textbf{x}}
+    +\left[\begin{array}{c}
+        \textbf{G}_{s}\\
+        \textbf{0}_{3N\times 12}
+    \end{array}\right]\textbf{n}
+    =\textbf{F}_{c}\tilde{\textbf{x}}+\textbf{G}_{c}\textbf{n}
+\end{equation}
+其中，
+\begin{equation}
+    \textbf{n}=\left[\textbf{n}_{g}^{T}, \textbf{n}_{wg}^{T}, \textbf{n}_{a}^{T}, \textbf{n}_{wa}^{T}\right]^T
+\end{equation}
+\begin{equation}
+    \textbf{F}_{s}=\left[\begin{array}{ccccc}
+        -\lfloor{\hat{\mathbf{\omega}}}\rfloor_{\times} &-\textbf{I}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3}\\
+        -\textbf{C}^{T}(\sideset{^I}{}{\mathop{\hat{\mathbf{q}}_{G}}})\lfloor{\sideset{^I}{}{\mathop{\hat{\mathbf{a}}}}}\rfloor_{\times}
+        &\textbf{0}_{3} &\textbf{0}_{3} &-\textbf{C}^{T}(\sideset{^I}{}{\mathop{\hat{\mathbf{q}}_{G}}}) &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &\textbf{I}_{3} &\textbf{0}_{3} &\textbf{0}_{3}
+    \end{array}\right]
+\end{equation}
+\begin{equation}
+    \textbf{G}_{s}=\left[\begin{array}{cccc}
+        -\textbf{I}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{I}_{3} &\textbf{0}_{3} &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &-\textbf{C}^{T}(\sideset{^I}{}{\mathop{\hat{\mathbf{q}}_{G}}}) &\textbf{0}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{I}_{3}\\
+        \textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3} &\textbf{0}_{3}
+    \end{array}\right]
+\end{equation}
+\begin{equation}
+    \mathbb{E}\left[\mathbf{n}(t)\mathbf{n}^{T}(\tau)\right]=\textbf{Q}_{c}\delta(t-\tau)
+\end{equation}
+
+\par
+接下来讨论离散形式的系统模型：假设陀螺仪信号$\sideset{^I}{}{\mathop{\mathbf{\omega}_{m}(t)}}$
+和加速度计信号$\sideset{^I}{}{\mathop{\mathbf{a}_{m}(t)}}$采样间隔为$\delta{t}\triangleq t_{k+1}-t_{k}$，
+每次采样后，系统估计状态的传递，利用公式（\ref{eqs:sysmodel21}）-（\ref{eqs:sysmodel26}）积分得到。
+估计状态的协方差通过如下公式得到：
+\begin{equation}
+    \begin{array}{c}
+    \dot{\Phi}_{k+1,k} = \mathbf{F}_{c}\Phi_{k+1,k}\\
+    initial\ condition:\ \Phi_{k,k}=\mathbf{I}_{15+3N}
+    \end{array}
+\end{equation}
+\begin{equation}
+    \textbf{P}_{k+1|k}=\Phi_{k+1,k}\mathbf{P}_{k|k}\Phi_{k+1,k}^{T}+\textbf{Q}_{d,k}
+\end{equation}
+其中离散的系统噪声协方差矩阵$\textbf{Q}_{d,k}$通过如下积分计算，
+\begin{equation}
+    \textbf{Q}_{d,k}=\int_{t_k}^{t_{k+1}}\Phi(t_{k+1},\tau)\textbf{G}_{c}\textbf{Q}_{c}\textbf{G}_{c}^{T}
+    \Phi^{T}(t_{k+1},\tau)d\tau
+\end{equation}
+
+\par
+下面讨论视觉观测模型：为简化问题分析，假设只有一个地图点$\textbf{p}_{f_i}$，其对应相机测量$\textbf{z}_i$
+为地图点$\sideset{^I}{}{\mathop{\textbf{p}_{f_i}}}$在图像平面上的投影，即有
+\begin{equation}\label{eqs:visualmodel1}
+    \textbf{z}_{i}=\frac{1}{p_z}\left[\begin{array}{c} p_x\\p_y\end{array}\right]+\eta_i
+\end{equation}
+其中
+\begin{equation}\label{eqs:visualmodel2}
+    \left[\begin{array}{c} p_x\\p_y\\p_z \end{array}\right]
+        =\sideset{^I}{}{\mathop{\mathbf{p}_{f_i}}}
+        =\textbf{C}(\sideset{^I}{}{\mathop{\mathbf{q}_{G}}})
+        (\sideset{^G}{}{\mathop{\mathbf{p}_{f_i}}}-\sideset{^G}{}{\mathop{\mathbf{p}_I}})
+\end{equation}
+且$\eta_i$为协方差为$\textbf{R}_i$的高斯白噪声。注意：该视觉观察模型假设图像测量为归一化平面，且相机坐标系
+和IMU坐标系重合，在实际中，相机和IMU之间存在内外参。
+\par
+视觉观测的误差模型表示为
+\begin{equation}
+    \tilde{\mathbf{z}}_{i}=\textbf{z}_{i}-\hat{\mathbf{z}}_{i} \simeq \textbf{H}_{i}\tilde{\textbf{x}}+\eta_{i}
+\end{equation}
+其中$\hat{\textbf{z}}=\textbf{h}(\hat{\textbf{x}})$是利用当前时刻估计状态$\hat{\textbf{x}}$通过模型（\ref{eqs:visualmodel1}）-（\ref{eqs:visualmodel2}）
+计算得到，且视觉测量雅可比矩阵$\textbf{H}_{i}$为
+\begin{equation}
+    \textbf{H}_{i}=\textbf{H}_{c}
+    \left[\textbf{H}_{\theta}\ \ \textbf{0}_{3\times 9}\ \ \textbf{H}_{p}\ \ |\ \ 
+    \textbf{0}_{3}\dots\textbf{H}_{f_i}\dots\textbf{0}_{3}\right]
+\end{equation}
+其中
+\begin{equation}
+    \textbf{H}_{c}=\frac{\partial\textbf{h}}{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f_i}}}}
+    =\frac{1}{p_{z}^{2}}\left[\begin{array}{ccc}
+    p_z &0 &-p_x\\
+    0 &p_z &-p_y
+    \end{array}\right]
+\end{equation}
+\begin{equation}
+    \textbf{H}_{\theta}=\frac{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f_i}}}}{\partial{\theta}}
+    =\lfloor\textbf{C}(\sideset{^I}{}{\mathop{\textbf{q}_{G}}})
+    (\sideset{^G}{}{\mathop{\textbf{p}_{f_i}}}-\sideset{^G}{}{\mathop{\textbf{p}_I}}) \rfloor_{\times}
+\end{equation}
+\begin{equation}
+    \textbf{H}_{p}=\frac{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f_i}}}}{\partial\sideset{^G}{}{\mathop{\textbf{p}_I}}}
+    =-\textbf{C}(\sideset{^I}{}{\mathop{\textbf{q}_G}})
+\end{equation}
+\begin{equation}
+    \textbf{H}_{f_i}=\frac{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f_i}}}}{\partial\sideset{^G}{}{\mathop{\textbf{p}_{f_i}}}}
+    =\textbf{C}(\sideset{^I}{}{\mathop{\textbf{q}_G}})
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{thebibliography}{99}  
+    \bibitem{Meyer2000}Meyer CD (2000) Matrix Analysis and Applied Linear Algebra. Philadelphia, PA: SIAM.
+\end{thebibliography}
+
+
+
+\end{document}
+
