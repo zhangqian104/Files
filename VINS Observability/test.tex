@@ -503,17 +503,181 @@ $\sideset{^I}{}{\mathop{\hat{\mathbf{\omega}}(t)}}=\sideset{^I}{}{\mathop{\mathb
     =\textbf{C}(\sideset{^I}{}{\mathop{\textbf{q}_G}})
 \end{equation}
 
+\subsection{可观性分析}
+为简化分析，将$I$系旋转用Cayley-Gibbs-Rodriguez(CGR)方式表示：$\sideset{^I}{}{\mathop{\textbf{s}_{G}}}$表示从$G$系到$I$系的旋转，且有
+\begin{equation}
+    \sideset{^I}{}{\mathop{\dot{\textbf{s}}_{G}(t)}}=\textbf{D}(\sideset{^I}{}{\mathop{\mathbf{\omega}(t)}}-\textbf{b}_{g}(t))
+\end{equation}
+其中$\textbf{D}\triangleq \frac{\partial\textbf{s}}{\partial\theta}=\frac{1}{2}(\textbf{I}_{3}+\lfloor\textbf{s}\rfloor_{\times}+\textbf{s}\textbf{s}^T)$。
+因此，系统状态变量$\textbf{x}$可表示为
+\begin{equation}
+    \textbf{x}=\left[\sideset{^I}{}{\mathop{\textbf{s}_{G}}}\ \ \textbf{b}_{g}^{T}
+    \ \ \sideset{^G}{}{\mathop{\textbf{v}_{I}^{T}}}\ \ \textbf{b}_{a}^{T}\ \ \sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}
+    \ \ \sideset{^G}{}{\mathop{\textbf{p}_{f}^{T}}}\right]^T
+\end{equation}
+另外，为简化书写，系统状态变量忽略坐标系标识，
+\begin{equation}
+    \textbf{x}=\left[\textbf{s}^T\ \ \textbf{b}_{g}^{T}\ \ \textbf{v}^{T}\ \ \textbf{b}_{a}^{T}
+    \ \ \textbf{p}^{T}\ \ \textbf{p}_{f}^{T}\right]^T
+\end{equation}
+则有VI-SLAM状态模型可表示为
+\begin{equation}
+    \left[\begin{array}{c}
+        \dot{\textbf{s}}\\\dot{\textbf{b}}_{g}\\\dot{\textbf{v}}\\
+        \dot{\textbf{b}_{a}}\\\dot{\textbf{p}}\\\dot{\textbf{p}}_{f}
+    \end{array}\right]
+    =\left[\begin{array}{c}
+        -\textbf{D}\textbf{b}_{g}\\\textbf{0}_{3\times 1}\\\textbf{g}-\textbf{C}^{T}\textbf{b}_{a}\\
+        \textbf{0}_{3\times 1}\\\textbf{v}\\\textbf{0}_{3\times 1}
+    \end{array}\right]
+    +\left[\begin{array}{c}
+        \textbf{D}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}
+    \end{array}\right]\mathbf{\omega}
+    +\left[\begin{array}{c}
+        \textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{C}^{T}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}
+    \end{array}\right]\textbf{a}
+\end{equation}
+\begin{equation}
+    \textbf{z}=\frac{1}{p_z}\left[\begin{array}{c} p_x\\p_y \end{array}\right]
+\end{equation}
+其中$\textbf{C}\triangleq\textbf{C}(\textbf{s})$，
+$\left[\begin{array}{c} p_x\\p_y\\p_z \end{array}\right]=\sideset{^I}{}{\mathop{\textbf{p}_{f}}}
+    =\textbf{C}\cdot(\textbf{p}_{f}-\textbf{p})$，且令
+\begin{equation}
+    \textbf{f}_{0}=\left[\begin{array}{c}
+        -\textbf{D}\textbf{b}_{g}\\\textbf{0}_{3\times 1}\\\textbf{g}-\textbf{C}^{T}\textbf{b}_{a}\\
+        \textbf{0}_{3\times 1}\\\textbf{v}\\\textbf{0}_{3\times 1}
+    \end{array}\right],
+    \textbf{f}_{1}=\left[\begin{array}{c}
+        \textbf{D}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}
+    \end{array}\right],
+    \textbf{f}_{2}=\left[\begin{array}{c}
+        \textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{C}^{T}\\\textbf{0}_{3}\\\textbf{0}_{3}\\\textbf{0}_{3}
+    \end{array}\right]
+\end{equation}
 
+\par
+接下来分析系统的可观性：首先根据\textbf{Theorem1}中的假设条件（C1）和（C2），找到系统的基函数（basis functions），其中直接根据条件（C1）
+得到第一个基函数$\mathbf{\beta}_{1}=\textbf{z}=\textbf{h}(\textbf{x})$,
+\begin{equation}
+    \mathbf{\beta}_{1}\triangleq \textbf{h}(\textbf{x})=\frac{1}{p_z}
+    \left[\begin{array}{c} p_x\\p_y \end{array}\right]
+\end{equation}
+然后循环计算条件（C2）中的$\frac{\partial\mathbf{\beta}_j}{\partial\textbf{x}}\cdot\textbf{f}_{i}$，
+并寻找新的基函数$\mathbf{\beta}$，其中基函数有很多种选择，应当选择那些有明确物理意义的量作为基函数。
+\par
+计算基函数$\mathbf{\beta}_1$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_1}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_1}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_1}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_1}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_1}{\partial\textbf{p}_f}\right]\\
+        &=\frac{\partial\textbf{h}}{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f}}}}
+        \frac{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f}}}}{\partial\textbf{x}}\\
+        &=\left[\begin{array}{ccc}
+            \frac{1}{p_z} &0 &-\frac{p_x}{p_z^2}\\
+            0 &\frac{1}{p_z} &-\frac{p_y}{p_z^2}\end{array}\right]
+            \left[\lfloor\sideset{^I}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+            \ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ -\textbf{C}\ \ \textbf{C}
+            \right]
+    \end{array}
+\end{equation}
 
+\par
+计算$\frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \begin{array}{ll}
+        \frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_{0}
+        &=\left[\begin{array}{ccc}
+        \frac{1}{p_z} &0 &-\frac{p_x}{p_z^2}\\
+        0 &\frac{1}{p_z} &-\frac{p_y}{p_z^2}\end{array}\right]
+        (-\lfloor\sideset{^I}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\textbf{b}_{g}-\textbf{C}\textbf{v})\\
+        &=\left[\textbf{I}_{2}\ \ -\mathbf{\beta}_{1}\right]
+        (-\lfloor\left[\begin{array}{c} \mathbf{\beta}_1\\ 1 \end{array}\right]\rfloor_{\times}\textbf{b}_{g}-\frac{1}{p_z}\textbf{C}\textbf{v})
+    \end{array}
+\end{equation}
+显然$\frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_0$没法表示成现有基函数$\{\mathbf{\beta}_1\}$的函数,
+因此增加基函数：
+\begin{eqnarray}
+    \mathbf{\beta}_2\triangleq& \frac{1}{p_z}\\
+    \mathbf{\beta}_3\triangleq& \textbf{C}\textbf{v}\\
+    \mathbf{\beta}_4\triangleq& \textbf{b}_{g}
+\end{eqnarray}
+其中$\mathbf{\beta}_2$表示地图的逆深度，$\mathbf{\beta}_3$表示$I$系下的速度，$\mathbf{\beta}_4$表示陀螺仪bias，则有，
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_{0}
+    \triangleq\left[\textbf{I}_{2}\ \ -\mathbf{\beta}_{1}\right]
+    (-\lfloor\left[\begin{array}{c} \mathbf{\beta}_1\\ 1 \end{array}\right]\rfloor_{\times}
+        \mathbf{\beta}_4-\mathbf{\beta}_{2}\mathbf{\beta}_3)
+\end{equation}
 
+计算$\frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_1$：
+\begin{equation}
+    \begin{array}{ll}
+        \frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_1
+        &=\left[\begin{array}{ccc} \frac{1}{p_z}&0&-\frac{p_x}{p_z^2}\\
+        0&\frac{1}{p_z}&-\frac{p_y}{p_z^2} \end{array}\right]
+        \lfloor\sideset{^I}{}{\mathop{\textbf{p}_f}} \rfloor_{\times}\\
+        &=\left[\begin{array}{cc} \textbf{I}_{2}\ \ -\mathbf{\beta}_{1} \end{array}\right]
+        \lfloor\left[\begin{array}{c}\mathbf{\beta}_1\\1 \end{array}\right] \rfloor_{\times}
+    \end{array}
+\end{equation}
+无需增加新的基函数。
+\par
+计算$\frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_2$：
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_1}{\partial\textbf{x}}\cdot\textbf{f}_2=\textbf{0}_{2\times 1}
+\end{equation}
+无需增加新的基函数。
 
+\par
+计算基函数$\mathbf{\beta}_2$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_2}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_2}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_2}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_2}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_2}{\partial\textbf{p}_f}\right]\\
+        &=\frac{\partial\mathbf{\beta}_2}{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f}}}}
+        \frac{\partial\sideset{^I}{}{\mathop{\textbf{p}_{f}}}}{\partial\textbf{x}}\\
+        &=-\frac{1}{p_z^2}\textbf{e}_{3}^{T}
+            \left[\lfloor\sideset{^I}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+            \ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ -\textbf{C}\ \ \textbf{C}
+            \right]
+    \end{array}
+\end{equation}
+其中$\textbf{e}_3$为$3\times 3$单位矩阵第三列：$\left[\textbf{e}_1\ \ \textbf{e}_2\ \ \textbf{e}_3\right]=\textbf{I}_3$。
 
+\par
+计算$\frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \begin{array}{ll}
+        \frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_0
+        &=-\frac{1}{p_z^2}\textbf{e}_{3}^{T}(-\lfloor\sideset{^I}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\textbf{b}_{g}-\textbf{Cv})\\
+        &=-\mathbf{\beta}_{2}\textbf{e}_{3}^{T}(-\lfloor\left[\begin{array}{c}\mathbf{\beta}_1\\1 \end{array}\right] \rfloor_{\times}
+            \mathbf{\beta}_{4}-\mathbf{\beta}_{2}\mathbf{\beta}_{3})
+    \end{array}
+\end{equation}
+无需增加新的基函数。
 
+\par
+计算$\frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_1$:
+\begin{equation}
+    \begin{array}{ll}
+        \frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_1
+        &=-\frac{1}{p_z^2}\textbf{e}_{3}^{T}\lfloor\sideset{^I}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\\
+        &=-\mathbf{\beta}_{2}\textbf{e}_{3}^{T}\lfloor\left[\begin{array}{c}\mathbf{\beta}_1\\1 \end{array}\right] \rfloor_{\times}
+    \end{array}
+\end{equation}
+无需增加新的基函数。
 
-
-
-
-
+\par
+计算$\frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_2$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_2}{\partial\textbf{x}}\cdot\textbf{f}_2=0
+\end{equation}
+无需增加新的基函数。
 
 
 \begin{thebibliography}{99}  
