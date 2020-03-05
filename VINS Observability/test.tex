@@ -679,6 +679,173 @@ $\left[\begin{array}{c} p_x\\p_y\\p_z \end{array}\right]=\sideset{^I}{}{\mathop{
 \end{equation}
 无需增加新的基函数。
 
+\par
+计算基函数$\mathbf{\beta}_3$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_3}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_3}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_3}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_3}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_3}{\partial\textbf{p}_f}\right]\\
+        &=\left[\lfloor\textbf{Cv}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \textbf{0}_3\ \ \textbf{C}\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3
+        \right]
+    \end{array}
+\end{equation}
+
+\par
+计算$\frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \begin{array}{ll}
+        \frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_0
+        &=-\lfloor\textbf{Cv}\rfloor_{\times}\textbf{b}_{g}+\textbf{C}\ \textbf{g}-\textbf{b}_{a}\\
+        &\triangleq -\lfloor\mathbf{\beta}_3\rfloor_{\times}\mathbf{\beta}_{4}+\mathbf{\beta}_{5}-\mathbf{\beta}_{6}
+    \end{array}
+\end{equation}
+其中定义新的基函数：
+\begin{equation}
+    \mathbf{\beta}_5 \triangleq \textbf{C}\ \textbf{g}
+\end{equation}
+\begin{equation}
+    \mathbf{\beta}_6 \triangleq \textbf{b}_{a}
+\end{equation}
+其中$\mathbf{\beta}_5$表示$I$系下的重力方向，$\mathbf{\beta}_6表示加速度计bias$。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_1$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_1
+    =\lfloor\textbf{Cv}\rfloor_{\times}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_2$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_3}{\partial\textbf{x}}\cdot\textbf{f}_2=\textbf{I}_3
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算基函数$\mathbf{\beta}_4$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_4}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_4}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_4}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_4}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_4}{\partial\textbf{p}_f}\right]\\
+        &=\left[\textbf{0}_3\ \ \textbf{I}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\right]
+    \end{array}
+\end{equation}
+
+\par
+计算$\frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_0=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_1$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_1=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_2$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_4}{\partial\textbf{x}}\cdot\textbf{f}_2=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+
+\par
+计算基函数$\mathbf{\beta}_5$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_5}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_5}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_5}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_5}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_5}{\partial\textbf{p}_f}\right]\\
+        &=\left[\lfloor\textbf{C}\ \textbf{g}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\right]
+    \end{array}
+\end{equation}
+
+\par
+计算$\frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_0
+    =-\lfloor\textbf{C}\ \textbf{g}\rfloor_{\times}\textbf{b}_{g}
+    =-\lfloor\mathbf{\beta}_5\rfloor_{\times}\mathbf{\beta}_4
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_1$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_1
+    =\lfloor\textbf{C}\ \textbf{g}\rfloor_{\times}
+    =\lfloor\mathbf{\beta}_5\rfloor_{\times}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_2$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_5}{\partial\textbf{x}}\cdot\textbf{f}_2=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算基函数$\mathbf{\beta}_6$关于$\textbf{x}$的生成空间，
+\begin{equation}
+    \begin{array}{ll}\frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}
+        &=\left[\frac{\partial\mathbf{\beta}_6}{\partial\mathbf{\theta}}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}
+        \ \ \frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}_{g}}\ \ \frac{\partial\mathbf{\beta}_6}{\partial\textbf{v}}
+        \ \ \frac{\partial\mathbf{\beta}_6}{\partial\textbf{b}_{a}}\ \ \frac{\partial\mathbf{\beta}_6}{\partial\textbf{p}}
+        \ \ \frac{\partial\mathbf{\beta}_6}{\partial\textbf{p}_f}\right]\\
+        &=\left[\textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\ \ \textbf{I}_3\ \ \textbf{0}_3\ \ \textbf{0}_3\right]
+    \end{array}
+\end{equation}
+
+\par
+计算$\frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_0$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_0=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_1$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_1=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+计算$\frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_2$:
+\begin{equation}
+    \frac{\partial\mathbf{\beta}_6}{\partial\textbf{x}}\cdot\textbf{f}_2=\textbf{0}_{3\times 1}
+\end{equation}
+无需增加新的基函数。
+
+\par
+至此，总共定义6个基函数：
+\begin{eqnarray}
+    \mathbf{\beta}_1 =& \textbf{h}(\textbf{x})\\
+    \mathbf{\beta}_2 =& \frac{1}{p_z}\\
+    \mathbf{\beta}_3 =& \textbf{Cv}\\
+    \mathbf{\beta}_4 =& \textbf{b}_g\\
+    \mathbf{\beta}_5 =& \textbf{Cg}\\
+    \mathbf{\beta}_6 =& \textbf{b}_a& 
+\end{eqnarray}
+
+
+
+
+
 
 \begin{thebibliography}{99}  
     \bibitem{Meyer2000}Meyer CD (2000) Matrix Analysis and Applied Linear Algebra. Philadelphia, PA: SIAM.
