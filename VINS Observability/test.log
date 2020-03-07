@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.2.29)  7 MAR 2020 15:37
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.2.29)  7 MAR 2020 18:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -981,6 +981,10 @@ File: figure2.jpg Graphic file (type bmp)
 <figure2.jpg>
 File: figure3.jpg Graphic file (type bmp)
 <figure3.jpg>
+File: figure2.jpg Graphic file (type bmp)
+<figure2.jpg>
+File: figure3.jpg Graphic file (type bmp)
+<figure3.jpg>
 File: figure4.jpg Graphic file (type bmp)
 <figure4.jpg>
 File: figure6.jpg Graphic file (type bmp)
@@ -994,7 +998,7 @@ File: figure8.jpg Graphic file (type bmp)
 <figure8.jpg>
  [3] [4] [5] [6]
 
-LaTeX Warning: Citation 'Meyer2000' on page 7 undefined on input line 289.
+LaTeX Warning: Citation 'Meyer2000' on page 7 undefined on input line 304.
 
 Missing character: There is no 
  in font [lmroman10-bold]:mapping=tex-text;!
@@ -1106,17 +1110,20 @@ Missing character: There is no ^^? in font [lmroman7-bold]:mapping=tex-text;!
 Missing character: There is no ^^? in font [lmroman5-bold]:mapping=tex-text;!
 Missing character: There is no ^^? in font [lmroman5-bold]:mapping=tex-text;!
  [13] [14] [15] [16]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1272.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1287.
  [17]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1272.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1287.
  (./test.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1272.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1272.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1287.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1287.
 Package rerunfilecheck Info: File `test.out' has not changed.
 (rerunfilecheck)             Checksum: E149311D2DE45ECAE8776971FDECAA0B.
 
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 
 Package biblatex Warning: Please (re)run Biber on the file:
@@ -1130,7 +1137,7 @@ Package logreq Info: Writing requests to 'test.run.xml'.
 Here is how much of TeX's memory you used:
  30955 strings out of 492922
  623710 string characters out of 6130899
- 1079256 words of memory out of 5000000
+ 1080256 words of memory out of 5000000
  34699 multiletter control sequences out of 15000+600000
  540520 words of font info for 85 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
