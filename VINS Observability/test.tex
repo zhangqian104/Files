@@ -6,7 +6,7 @@
 \usepackage{amsmath}
 \usepackage{biblatex}
 \usepackage{hyperref}
-
+\usepackage{color}
 
 \title{SLAM系统可观性和一致性分析}
 \author{张谦}
@@ -195,7 +195,11 @@ $\ddot{y}=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}\dot{\textbf{x}}=\
 （a）矩阵$\mathcal{O}$中的无限多行，均可表示为矩阵$\mathcal{O}^\prime$行向量的线性组合，其中$\mathcal{O}\prime$
 的行向量来自于$\mathcal{O}$;
 （b）求解矩阵$\mathcal{O}\prime$的零空间，即可得到系统不可观的方向。尽管条件（b）可以直接求解得到，但是条件（a）很难
-找到。\par
+找到。
+\par
+{\color{red}注意：由Lie Derivative的定义可知，Lie Derivative是光滑标量函数$h(\textbf{x})$对向量$\textbf{x}$求生成空间（偏导数），
+得到向量$\frac{\partial{h}}{\partial\textbf{x}}$后，再乘以光滑向量场$\textbf{f}(\textbf{x})$（向量），得到一个新的标量。
+因此，如果$h(\textbf{x})$为向量，则应看作多个标量元素；如果$\textbf{f}(\textbf{x})$为矩阵，则应看作多个列向量，再计算Lie Derivative。}
 
 \subsection{非线性系统可观性分析}
 通过上面介绍可知，要分析非线性系统的可观性，是非常有挑战的，因为要计算具有无限行组成的可观矩阵的零空间。
@@ -214,7 +218,9 @@ $\ddot{y}=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}\dot{\textbf{x}}=\
 （C3）定义一个可观的非线性系统：
 \begin{equation}\label{eqs:nonlinearsys2}
     \left\{ \begin{array}{l}
-        \dot{\mathbf{\beta}}=\textbf{g}_0(\mathbf{\beta})+\sum_{i=1}^{l}{\textbf{g}_i(\mathbf{\beta})\textbf{u}_i}\\
+        \dot{\mathbf{\beta}}=\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}\frac{\partial\textbf{x}}{\partial t}
+            =\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}\dot{\mathbf{x}}
+            =\textbf{g}_0(\mathbf{\beta})+\sum_{i=1}^{l}{\textbf{g}_i(\mathbf{\beta})\textbf{u}_i}\\
         \textbf{z}=\textbf{h}=\mathbf{\beta}_1
     \end{array}\right.
 \end{equation}
@@ -842,8 +848,333 @@ $\left[\begin{array}{c} p_x\\p_y\\p_z \end{array}\right]=\sideset{^I}{}{\mathop{
     \mathbf{\beta}_6 =& \textbf{b}_a& 
 \end{eqnarray}
 
+\par
+根据$\textbf{Theorem1}$中条件（C3），由基函数构建的非线性系统为：
+\begin{equation}
+    \dot{\mathbf{\beta}}=\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}\frac{\partial\textbf{x}}{\partial t}
+    =\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}\dot{\mathbf{x}}
+    =\frac{\partial\mathbf{\beta}}{\partial\textbf{x}}(\textbf{f}_{0}+\textbf{f}_{1}\mathbf{\omega}+\textbf{f}_{2}\mathbf{a})
+    =\textbf{g}_0+\textbf{g}_{1}\mathbf{\omega}+\textbf{g}_{2}\textbf{a}
+\end{equation}
+即有
+\begin{equation}\label{eqs:nonlinearsys3}
+    \left[\begin{array}{c}\dot{\mathbf{\beta}}_1\\ \dot{\mathbf{\beta}}_2\\
+    \dot{\mathbf{\beta}}_3\\ \dot{\mathbf{\beta}}_4\\
+    \dot{\mathbf{\beta}}_5\\ \dot{\mathbf{\beta}}_6
+    \end{array}\right]
+    =\left[\begin{array}{c}\bar{\bar{\mathbf{\beta}}}_{1}(-\lfloor\bar{\mathbf{\beta}}_{1}\rfloor_{\times}\mathbf{\beta}_{4}
+    -\mathbf{\beta}_{2}\mathbf{\beta}_3) \\
+    \mathbf{\beta}_{2}\textbf{e}_{3}^{T}(\lfloor\bar{\mathbf{\beta}}_1\rfloor_{\times}\mathbf{\beta}_{4}
+    +\mathbf{\beta}_{2}\mathbf{\beta}_{3})\\
+    -\lfloor\mathbf{\beta}_3\rfloor_{\times}\mathbf{\beta}_{4}+\mathbf{\beta}_5-\mathbf{\beta}_6\\
+    \textbf{0}_{3\times 1}\\
+    -\lfloor\mathbf{\beta}_5\rfloor_{\times}\mathbf{\beta}_4\\\textbf{0}_{3\times 1}
+    \end{array}\right]
+    +\left[\begin{array}{c} \bar{\bar{\mathbf{\beta}}}_{1}\lfloor\bar{\mathbf{\beta}}_{1}\rfloor_{\times}\\
+    -\mathbf{\beta}_{2}\textbf{e}_{3}^{T}\lfloor\bar{\mathbf{\beta}}_{1}\rfloor_{\times}\\
+    \lfloor\mathbf{\beta}_3\rfloor_{\times}\\\textbf{0}_3\\\lfloor\mathbf{\beta}_5\rfloor_{\times}\\
+    \textbf{0}_3
+    \end{array}\right]\mathbf{\omega}
+    +\left[\begin{array}{c}\textbf{0}_{2\times 3}\\\textbf{0}_{1\times 3}\\\textbf{I}_3\\
+    \textbf{0}_3\\\textbf{0}_3\\\textbf{0}_3 \end{array}\right]\textbf{a}
+\end{equation}
+\begin{equation}
+    \textbf{z}=\textbf{h}(\textbf{x})=\mathbf{\beta}_1
+\end{equation}
+其中$\bar{\mathbf{\beta}}_{1}=\left[\mathbf{\beta}_{1}^{T}\ \ 1\right]^T$，
+$\bar{\bar{\mathbf{\beta}}}_{1}=\left[\textbf{I}_{2}\ \ -\mathbf{\beta}_{1}\right]$。
 
+\par
+下面讨论基于基函数$\mathbf{\beta}$的系统（\ref{eqs:nonlinearsys3}）可观性，即检查是否满足$\textbf{Theorem1}$中的条件（\textbf{C3}）：
+系统（\ref{eqs:nonlinearsys3}）的可观矩阵$\Xi$是否为列满秩。由可观矩阵的定义可知，矩阵$\Xi$是一个无数行的矩阵，
+但是为了证明该矩阵为列满秩，可以选取它的子矩阵$\Xi'$来分析，如果$\Xi'$是列满秩，则$\Xi$也是列满秩。
+选取Lie Derivative集合$\mathcal{L}$计算可观子矩阵$\Xi'$：
+\begin{equation}
+    \mathcal{L}=\{\mathcal{L}^{0}\textbf{h},\mathcal{L}_{\textbf{g}_{0}\textbf{g}_{13}\textbf{g}_{21}}^{3}\textbf{h},
+    \mathcal{L}_{\textbf{g}_{0}}^{1}\textbf{h}, \mathcal{L}_{\textbf{g}_{0}\textbf{g}_{13}\textbf{g}_{13}}^{3}\textbf{h},
+    \mathcal{L}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{21}}^{3}\textbf{h},
+    \mathcal{L}_{\textbf{g}_{0}\textbf{g}_{0}}^{2}\textbf{h},
+    \mathcal{L}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{13}}^{3}\textbf{h},
+    \mathcal{L}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{0}}^{3}\textbf{h}\}
+\end{equation}
+其中$\textbf{g}_{ij}$表示矩阵$\textbf{g}_{i}$的第$j$列，即$\textbf{g}_{ij}=\textbf{g}_{i}\textbf{e}_{j}$，
+$\textbf{e}_{j}$为单位矩阵的第$j$列。
 
+\par
+计算Lie Derivative集合$\mathcal{L}$关于基函数$\mathbf{\beta}$的生成空间，得到可观矩阵$\Xi'$：
+\begin{equation}
+    \Xi'=\left[\begin{array}{c}
+    \frac{\partial{\mathcal{L}^{0}}\textbf{h}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{3}_{\textbf{g}_{0}\textbf{g}_{13}\textbf{g}_{21}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{1}_{\textbf{g}_0}}\textbf{h}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{3}_{\textbf{g}_{0}\textbf{g}_{13}\textbf{g}_{13}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{3}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{21}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{2}_{\textbf{g}_{0}\textbf{g}_{0}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{3}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{13}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \frac{\partial{\mathcal{L}^{3}_{\textbf{g}_{0}\textbf{g}_{0}\textbf{g}_{0}}\textbf{h}}}{\partial{\mathbf{\beta}}}\\
+    \end{array}\right]
+    =\left[\begin{array}{ccc} \textbf{I}_{3\times 3}& \textbf{0}_{3\times 6}& \textbf{0}_{3\times 6}\\
+    \textbf{0}_{1\times 3}& \textbf{0}_{1\times 6}& \textbf{0}_{1\times 6}\\
+    \textbf{X}_{6\times 3}& {\Psi}_{6\times 6}& \textbf{0}_{6\times 6}\\
+    \textbf{Y}_{6\times 3}& \mathbf{Z}_{6\times 6}& {\Theta}_{6\times 6}
+    \end{array}\right]
+\end{equation}
+其中第二行块矩阵为零，舍弃掉后得到新观测矩阵：
+\begin{equation}
+    \Xi''=\left[\begin{array}{ccc} \textbf{I}_{3\times 3}& \textbf{0}_{3\times 6}& \textbf{0}_{3\times 6}\\
+        \textbf{X}_{6\times 3}& {\Psi}_{6\times 6}& \textbf{0}_{6\times 6}\\
+        \textbf{Y}_{6\times 3}& \mathbf{Z}_{6\times 6}& {\Theta}_{6\times 6}
+        \end{array}\right]
+\end{equation}
+为证明矩阵$\Xi''$为列满秩，只需证明矩阵$\Psi$和$\Theta$为满秩矩阵。
+
+\par
+矩阵$\Psi$具体为：
+\begin{equation}
+\Psi=\left[\begin{array}{cccccc} 
+    -\beta_{21}&0&\beta_{11}\beta_{21}&-\beta_{11}\beta_{12}&\beta_{11}^{2}+1&-\beta_{12}\\
+    0&-\beta_{21}&\beta_{12}\beta_{21}&-\beta_{12}^{2}-1&\beta_{11}\beta_{12}&-\beta_{11}\\
+    \beta_{21}&0&-\beta_{11}\beta_{21}&4\beta_{11}\beta_{12}&2\beta_{12}^{2}-2\beta_{11}^{2}&\beta_{12}\\
+    0&\beta_{21}&-\beta_{12}\beta_{21}&2\beta_{12}^{2}-2\beta_{11}^{2}&-4\beta_{11}\beta_{12}&-\beta_{11}\\
+    0&0&-\beta_{21}^{2}&2\beta_{12}\beta_{21}&-4\beta_{11}\beta_{21}&0\\
+    0&0&0&0&-2\beta_{12}\beta_{21}&-2\beta_{21}
+\end{array}\right]
+\end{equation}
+其中$\beta_{ij}$表示第$i$个基函数$\mathbf{\beta}_i$的第$j$个元素。
+通过检查矩阵$\Psi$的行列式，
+\begin{equation}
+    det(\Psi)=-4\beta_{21}^{5}(\beta_{11}^{2}+\beta_{12}^{2}-1)(2\beta_{11}^{2}+2\beta_{12}^{2}+1)
+    =-4\frac{1}{p_z^5}(\frac{p_x^2}{p_z^2}+\frac{p_y^2}{p_z^2}-1)(2\frac{p_x^2}{p_z^2}+2\frac{p_y^2}{p_z^2}+1)
+\end{equation}
+由于$p_z\not=0$且$2\frac{p_x^2}{p_z^2}+2\frac{p_y^2}{p_z^2}+1\geqslant 1$，因此矩阵$\Psi$的行列式唯一可能为零
+的情况为$\frac{p_x^2}{p_z^2}+\frac{p_y^2}{p_z^2}-1=0$，即：所有地图点的视觉观测，位于图像归一化平面的单位圆上。
+这中情况在实际中是不可能事件，因为控制输入是随着时间任意变化的。因而矩阵$\Psi$一般而言是满秩的。
+
+\par
+矩阵$\Theta$具体为：
+\begin{equation}
+    \Theta=\left[\begin{array}{cccccc} 
+        -\beta_{21}&0&\beta_{11}\beta_{21}&\beta_{21}&0&-\beta_{11}\beta_{21}\\
+        0&-\beta_{21}&\beta_{12}\beta_{21}&0&\beta_{21}&-\beta_{12}\beta_{21}\\
+        0&-\beta_{21}&\beta_{12}\beta_{21}&0&0&-\beta_{12}\beta_{21}\\
+        \beta_{21}&0&-\beta_{11}\beta_{21}&0&0&\beta_{11}\beta_{21}\\
+        \Theta_{5,1}&\Theta_{5,2}&\Theta_{5,3}&\Theta_{5,4}&\Theta_{5,5}&\Theta_{5,6}\\
+        \Theta_{6,1}&\Theta_{6,2}&\Theta_{6,3}&\Theta_{6,4}&\Theta_{6,5}&\Theta_{6,6}
+    \end{array}\right]
+\end{equation}
+其中，
+\begin{equation}
+    \Theta_{5,1}=-2\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    -\beta_{21}(2\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})-2\beta_{11}\beta_{21}\beta_{42}
+\end{equation}
+\begin{equation}
+    \Theta_{5,2}=2\beta_{21}\beta_{43}+\beta_{21}(\beta_{43}+\beta_{11}\beta_{41})+2\beta_{11}\beta_{21}\beta_{41}
+\end{equation}
+\begin{equation}
+    \begin{array}{ll}
+        \Theta_{5,3}=&2\beta_{21}(\beta_{42}-\beta_{21}\beta_{31}-\beta_{12}\beta_{43}+
+        \beta_{11}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33}))-2\beta_{21}\beta_{42}\\
+        &-\beta_{21}^{2}(\beta_{31}-\beta_{11}\beta_{33})-\beta_{12}\beta_{21}(\beta_{43}+\beta_{11}\beta_{41})
+        +2\beta_{11}\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})\\
+        &+\beta_{11}\beta_{21}(2\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    \end{array}
+\end{equation}
+\begin{equation}
+    \Theta_{5,4}=2\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    +\beta_{21}(2\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})+\beta_{11}\beta_{21}\beta_{42}
+\end{equation}
+\begin{equation}
+    \Theta_{5,5}=-\beta_{21}\beta_{43}-\beta_{21}(\beta_{43}+\beta_{11}\beta_{41})-\beta_{11}\beta_{21}\beta_{41}
+\end{equation}
+\begin{equation}
+    \begin{array}{ll}
+    \Theta_{5,6}=&\beta_{21}^{2}(\beta_{31}-\beta_{11}\beta_{33})+\beta_{21}\beta_{42}-2\beta_{21}(\beta_{42}-\beta_{21}\beta_{31}\\
+    &-\beta_{12}\beta_{43}+\beta_{11}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33}))
+    +\beta_{12}\beta_{21}(\beta_{43}+\beta_{11}\beta_{41})-2\beta_{11}\beta_{21}\\
+    &(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    -\beta_{11}\beta_{21}(2\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    \end{array}
+\end{equation}
+\begin{equation}
+    \Theta_{6,1}=-2\beta_{21}\beta_{43}-\beta_{21}(\beta_{43}+\beta_{12}\beta_{42})-2\beta_{12}\beta_{21}\beta_{42}
+\end{equation}
+\begin{equation}
+    \Theta_{6,2}=2\beta_{12}\beta_{21}\beta_{41}-\beta_{21}(\beta_{11}\beta_{42}-2\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    -2\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+\end{equation}
+\begin{equation}
+    \begin{array}{ll}
+    \Theta_{6,3}=&2\beta_{21}\beta_{41}-\beta_{21}^{2}(\beta_{32}-\beta_{12}\beta_{33})
+    -2\beta_{21}(\beta_{41}+\beta_{21}\beta_{32}-\beta_{11}\beta_{43}\\
+    &-\beta_{12}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33}))\\
+    &+\beta_{11}\beta_{21}(\beta_{43}+\beta_{12}\beta_{41})+2\beta_{12}\beta_{21}
+    (\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})\\
+    &+\beta_{12}\beta_{21}(\beta_{11}\beta_{42}-2\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    \end{array}
+\end{equation}
+\begin{equation}
+    \Theta_{6,4}=\beta_{21}\beta_{43}+\beta_{21}(\beta_{43}+\beta_{12}\beta_{42})+\beta_{12}\beta_{21}\beta_{42}
+\end{equation}
+\begin{equation}
+    \Theta_{6,5}=2\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    +\beta_{21}(\beta_{11}\beta_{42}-2\beta_{12}\beta_{41}+\beta_{21}\beta_{33})-\beta_{12}\beta_{21}\beta_{41}
+\end{equation}
+\begin{equation}
+    \begin{array}{ll}
+        \Theta_{6,6} = &\beta_{21}^{2}(\beta_{32}-\beta_{12}\beta_{33})-\beta_{21}\beta_{41}
+        +2\beta_{21}(\beta_{41}+\beta_{21}\beta_{32}-\beta_{11}\beta_{43}\\
+        &-\beta_{12}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33}))
+        -\beta_{11}\beta_{21}(\beta_{43}+\beta_{12}\beta_{42})\\
+        &-2\beta_{12}\beta_{21}(\beta_{11}\beta_{42}-\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+        -\beta_{12}\beta_{21}(\beta_{11}\beta_{42}-2\beta_{12}\beta_{41}+\beta_{21}\beta_{33})
+    \end{array}
+\end{equation}
+检查矩阵$\Theta$的行列式：
+\begin{equation}
+    \begin{array}{ll}
+        det(\Theta)=&3\beta_{21}^{7}(\beta_{11}\beta_{33}\beta_{41}-\beta_{32}\beta_{42}-\beta_{31}\beta_{41}
+        +\beta_{12}\beta_{33}\beta_{42})\\
+        &=3\beta_{21}^{7}\left[\beta_{11}\beta_{33}-\beta_{31}, \beta_{12}\beta_{33}-\beta_{32}\right]
+        \left[\begin{array}{c}
+            \beta_{41}\\\beta_{42}
+        \end{array}\right]
+    \end{array}
+\end{equation}
+其中$\beta_{21}=\frac{1}{p_z}\not=0$；$\beta_4=\textbf{b}_{g}\not=0$；
+由于$\beta_1=\textbf{h}$，以及$\beta_3=\textbf{Cv}$，则有
+\begin{equation}
+    \left[\beta_{11}\beta_{33}-\beta_{31}, \beta_{12}\beta_{33}-\beta_{32}\right]^T=\textbf{A}\beta_3
+\end{equation}
+因为$\beta_3\not=\textbf{0}_{3\times 1}$（相机移动），并且矩阵$\textbf{A}$为列满秩，则有$\textbf{A}\beta_1\not=0$。
+最后检查
+\begin{equation}
+    \begin{array}{c}
+        \left[\beta_{11}\beta_{33}-\beta_{31}, \beta_{12}\beta_{33}-\beta_{32}\right]
+        \left[\begin{array}{c}
+            \beta_{41}\\\beta_{42}
+        \end{array}\right]=0\\
+        \Leftrightarrow \left[\beta_{41},\beta_{42}\right]\textbf{A}\beta_3=0\\
+    \Leftrightarrow \textbf{A}\beta_3=
+        \lambda\left[\begin{array}{c}\beta_{42}\\-\beta_{41} \end{array}\right],\lambda\in\mathbb{R}
+    \end{array}
+\end{equation}
+从上式可看出，对于给定的$\beta_{41}$和$\beta_{42}$，由于$\beta_1$是时变的，因此矩阵$\textbf{A}$
+将$\beta_3=\textbf{Cv}$限定在特定的流形上，这在实际的任意控制输入系统中，是不存在的。因此有
+\begin{equation}
+    \left[\beta_{11}\beta_{33}-\beta_{31}, \beta_{12}\beta_{33}-\beta_{32}\right]
+    \left[\begin{array}{c}
+        \beta_{41}\\\beta_{42}
+    \end{array}\right]\not=0
+\end{equation}
+因而矩阵$\Theta$一般而言是满秩的。
+
+\par
+至此，矩阵$\Psi$和$\Theta$均为满秩，对于可观矩阵$\Xi''$，利用左上角的单位矩阵，
+高斯消元消去矩阵$\textbf{X}_{6\times 3}$和$\textbf{Y}_{6\times 3}$；利用中间的$\Psi$消去
+矩阵$\textbf{Z}_{6\times 6}$，即可得到新的可观矩阵,
+\begin{equation}
+    \Xi'''=\left[\begin{array}{ccc} \textbf{I}_{3\times 3}& \textbf{0}_{3\times 6}& \textbf{0}_{3\times 6}\\
+        \textbf{0}_{6\times 3}& {\Psi}_{6\times 6}& \textbf{0}_{6\times 6}\\
+        \textbf{0}_{6\times 3}& \mathbf{0}_{6\times 6}& {\Theta}_{6\times 6}
+        \end{array}\right]
+\end{equation}
+由于矩阵$\Psi$和$\Theta$均为满秩，非主对角线元素均为零，所以有矩阵$\Xi'''$为满秩，
+进而可知可观矩阵$\Xi$为列满秩。
+
+\par
+下面讨论$\mathcal{O}=\Xi\textbf{B}$中的$\textbf{B}$矩阵，通过分析矩阵$\textbf{B}$的零空间，
+得到系统不可观的情况。通过堆叠基函数$\beta$对状态变量$\textbf{x}$的偏导，得到，
+\begin{equation}
+    \textbf{B}=\left[\begin{array}{ccccc}
+    \mathbf{\xi}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+    \textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+    \textbf{0}_3&\textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3\\
+    \textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{I}_3&\textbf{0}_3\\
+    \textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{I}_3
+    \end{array}\right]
+    \left[\begin{array}{cccccc}
+        \lfloor\sideset{^I}{}{\mathop{\textbf{p}_f}}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&-\textbf{C}&\textbf{C}\\
+        \lfloor\textbf{Cv}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{C}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \lfloor\textbf{Cg}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3
+    \end{array}\right]
+    \triangleq \textbf{B}_{1}\textbf{B}_{2}
+\end{equation}
+其中，
+\begin{equation}
+    \mathbf{\xi}=\left[\begin{array}{ccc}
+        \frac{1}{p_z}&0&-\frac{p_x}{p_z^2}\\
+        0&\frac{1}{p_z}&-\frac{p_y}{p_z^2}\\
+        0&0&-\frac{1}{p_z^2}
+    \end{array}\right]
+\end{equation}
+显然矩阵$\textbf{B}_1$满秩，则只需分析$15\times 18$矩阵$\textbf{B}_2$的零空间。
+直观得到并验证，下列矩阵为$\textbf{B}_2$的右零空间（right null space），
+\begin{equation}
+    \textbf{N}_R=\left[\begin{array}{cc}
+        \textbf{0}_3&\frac{\partial\textbf{s}}{\partial\mathbf{\theta}}\textbf{Cg}\\
+        \textbf{0}_3&\textbf{0}_3\\
+        \textbf{0}_3&-\lfloor\textbf{v}\rfloor_{\times}\textbf{g}\\
+        \textbf{0}_3&\textbf{0}_{3\times 1}\\
+        \textbf{I}_3&-\lfloor\textbf{p}\rfloor_{\times}\textbf{g}\\
+        \textbf{I}_3&-\lfloor\textbf{p}_f\rfloor_{\times}\textbf{g}
+    \end{array}\right]
+\end{equation}
+接下来证明矩阵$\textbf{B}_2$无其它右零空间向量：通过证明矩阵$\textbf{B}_2$的左零空间（left null space）
+只有1维，即有$15\times 18$矩阵$\textbf{B}_2$的秩为14，进而矩阵$\textbf{B}_2$的右零空间有$18-14=4$维。
+假设左零空间为$\textbf{N}_L=\left[\textbf{N}_1,\textbf{N}_2,\textbf{N}_3,\textbf{N}_4,\textbf{N}_5\right]$，则有
+\begin{equation}
+    \textbf{0}=\left[\textbf{N}_1,\textbf{N}_2,\textbf{N}_3,\textbf{N}_4,\textbf{N}_5\right]
+    \left[\begin{array}{cccccc}
+        \lfloor\sideset{^I}{}{\mathop{\textbf{p}_f}}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&-\textbf{C}&\textbf{C}\\
+        \lfloor\textbf{Cv}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{C}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \lfloor\textbf{Cg}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{0}_3\\
+        \textbf{0}_3&\textbf{0}_3&\textbf{0}_3&\textbf{I}_3&\textbf{0}_3&\textbf{0}_3
+    \end{array}\right]
+\end{equation}
+由矩阵$\textbf{B}_2$的第2列和第4列可知，$\textbf{N}_3\textbf{I}_3=\textbf{0}$和$\textbf{N}_5\textbf{I}_3=\textbf{0}$，
+则有$\textbf{N}_3=\textbf{0}$，$\textbf{N}_5=\textbf{0}$；由矩阵$\textbf{B}_2$的第3列和第5、6列可知，
+$\textbf{N}_1\textbf{C}=\textbf{0}$和$\textbf{N}_2\textbf{C}=\textbf{0}$，由于旋转矩阵$\textbf{C}$为满秩，则有
+$\textbf{N}_1=\textbf{0}$，$\textbf{N}_2=\textbf{0}$；因此，只有向量$\textbf{N}_4$为左零空间的非零项，由矩阵$\textbf{B}_2$
+的第1列可知，
+\begin{equation}
+    \textbf{N}_{4}\lfloor\textbf{Cg}\rfloor_{\times}\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}=\textbf{0}
+\end{equation}
+由于矩阵$\frac{\partial\mathbf{\theta}}{\partial\textbf{s}}$为满秩，则有
+\begin{equation}
+    \textbf{N}_4=\pm(\textbf{Cg})^T
+\end{equation}
+因此矩阵$\textbf{B}_2$有左零空间，
+\begin{equation}
+    \textbf{N}_L=\left[\textbf{0}_{1\times 3},\textbf{0}_{1\times 3},\textbf{0}_{1\times 3},(\textbf{Cg})^T,\textbf{0}_{1\times 3}\right]
+\end{equation}
+且其只有1维。至此，可知矩阵$\textbf{B}_2$有且仅有右零空间$\textbf{N}_R$。
+
+\par
+接下来讨论右零空间$\textbf{N}_R$每一维对应的物理意义，即有哪些量是不可观的。
+令$\textbf{N}_R=span\left[\textbf{n}_{1},\textbf{n}_{2},\textbf{n}_{3},\textbf{n}_{4}\right]$，
+利用$\textbf{n}_{1},\textbf{n}_{2},\textbf{n}_{3},\textbf{n}_{4}$对状态变量
+$\textbf{x}=\left[\sideset{^I}{}{\mathop{\textbf{s}_{G}}}\ \ \textbf{b}_{g}^{T}
+\ \ \sideset{^G}{}{\mathop{\textbf{v}_{I}^{T}}}\ \ \textbf{b}_{a}^{T}\ \ \sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}
+\ \ \sideset{^G}{}{\mathop{\textbf{p}_{f}^{T}}}\right]^T$进行微小扰动，
+通过观察$\textbf{x}$中哪些量会变化，则对应的量即为不可观的。
+\par
+首先利用$\textbf{n}_{1},\textbf{n}_{2},\textbf{n}_{3}$对$\textbf{x}$施加扰动，
+\begin{equation}
+    \textbf{x}'=\textbf{x}+c_1\textbf{n}_1+c_2\textbf{n}_2+c_3\textbf{n}_3
+\end{equation}
+发现只有$\sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}$和$\sideset{^G}{}{\mathop{\textbf{p}_{f}^{T}}}$发生变化，
+因此有相对于全局坐标$G$系的平移（三维）是不可观的。
+\par
+观察$\textbf{N}_R$的第4列$\textbf{n}_4$，其中与重力$\textbf{g}$有关，考虑利用$\textbf{n}_4$
+对状态量$\textbf{x}$施加沿重力方向的旋转扰动$\textbf{C}(\sideset{^{G'}}{}{\mathop{\textbf{q}_G}})\triangleq\sideset{^{G'}}{}{\mathop{\textbf{R}_G}}$，
+且有近似，
+\begin{equation}
+    \sideset{^{G'}}{}{\mathop{\textbf{R}_G}}\simeq \textbf{I}_3-c\lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}
+\end{equation}
+其中$\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}$为沿着重力方向的单位向量。
 
 
 
