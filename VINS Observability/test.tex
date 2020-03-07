@@ -1165,8 +1165,12 @@ $\textbf{x}=\left[\sideset{^I}{}{\mathop{\textbf{s}_{G}}}\ \ \textbf{b}_{g}^{T}
 \begin{equation}
     \textbf{x}'=\textbf{x}+c_1\textbf{n}_1+c_2\textbf{n}_2+c_3\textbf{n}_3
 \end{equation}
-发现只有$\sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}$和$\sideset{^G}{}{\mathop{\textbf{p}_{f}^{T}}}$发生变化，
-因此有相对于全局坐标$G$系的平移（三维）是不可观的。
+\begin{equation}
+    \delta\textbf{x}=c_1\textbf{n}_1+c_2\textbf{n}_2+c_3\textbf{n}_3
+\end{equation}
+对应于$\sideset{^G}{}{\mathop{\textbf{p}_{I}^{T}}}$和$\sideset{^G}{}{\mathop{\textbf{p}_{f}^{T}}}$变化，
+即$\textbf{n}_1,\textbf{n}_2,\textbf{n}_3$表示全局坐标$G$系下三维平移变化，因此相对于全局坐标$G$系的三维平移是不可观的。
+
 \par
 观察$\textbf{N}_R$的第4列$\textbf{n}_4$，其中与重力$\textbf{g}$有关，考虑利用$\textbf{n}_4$
 对状态量$\textbf{x}$施加沿重力方向的旋转扰动$\textbf{C}(\sideset{^{G'}}{}{\mathop{\textbf{q}_G}})\triangleq\sideset{^{G'}}{}{\mathop{\textbf{R}_G}}$，
@@ -1175,6 +1179,87 @@ $\textbf{x}=\left[\sideset{^I}{}{\mathop{\textbf{s}_{G}}}\ \ \textbf{b}_{g}^{T}
     \sideset{^{G'}}{}{\mathop{\textbf{R}_G}}\simeq \textbf{I}_3-c\lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}
 \end{equation}
 其中$\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}$为沿着重力方向的单位向量。
+
+\par
+对于旋转扰动，
+\begin{equation}
+    \begin{array}{ll}
+        \sideset{^I}{}{\mathop{\textbf{R}_{G'}}}&\simeq (\textbf{I}_3-
+        \lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times})\sideset{^I}{}{\mathop{\textbf{R}_{G}}}\\
+        &=(\textbf{I}_3-\lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times})\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        (\textbf{I}_3-c\lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times})\\
+        &=\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}-\lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times}
+        \sideset{^I}{}{\mathop{\textbf{R}_{G'}}}-c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        \lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}
+        +c\lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times}\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        \lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}\\
+        &\simeq \sideset{^I}{}{\mathop{\textbf{R}_{G'}}}-\lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times}
+        \sideset{^I}{}{\mathop{\textbf{R}_{G'}}}-c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        \lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}\\
+        \Leftrightarrow \lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times}
+        \sideset{^I}{}{\mathop{\textbf{R}_{G'}}}&=-c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        \lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}\\
+        \Leftrightarrow \lfloor\sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}\rfloor_{\times}
+        &=-c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}
+        \lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}\sideset{^I}{}{\mathop{\textbf{R}_{G'}^T}}\\
+        &=\lfloor -c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}\\
+        \Leftrightarrow \sideset{^I}{}{\mathop{\delta\mathbf{\theta}}}&=
+        -c\sideset{^I}{}{\mathop{\textbf{R}_{G'}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\\
+        &=-c\sideset{^I}{}{\mathop{\textbf{R}_{G}}}\sideset{^{G}}{}{\mathop{\textbf{R}_{G'}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\\
+        &=-c\sideset{^I}{}{\mathop{\textbf{R}_{G}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\\
+        &=-\frac{c}{\lVert\sideset{^G}{}{\mathop{\textbf{g}}}\rVert_2}\sideset{^I}{}{\mathop{\textbf{R}_{G}}}\sideset{^G}{}{\mathop{\textbf{g}}}
+    \end{array}
+\end{equation}
+其中因为$\sideset{^{G}}{}{\mathop{\textbf{R}_{G'}}}$是绕着重力方向的旋转，因此有
+$\sideset{^G}{}{\mathop{\textbf{R}_{G'}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}=\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}$
+另外有，
+\begin{equation}
+    \delta\textbf{s}=\frac{\partial\textbf{s}}{\partial\mathbf{\theta}}\delta\mathbf{\theta}
+    =-\frac{c}{\lVert\sideset{^G}{}{\mathop{\textbf{g}}}\rVert_2}\frac{\partial\textbf{s}}{\partial\mathbf{\theta}}
+    \sideset{^I}{}{\mathop{\textbf{R}_{G}}}\sideset{^G}{}{\mathop{\textbf{g}}}
+\end{equation}
+
+\par
+对于旋转之外的其他状态变量，
+\begin{equation}
+    \begin{array}{ll}
+        \textbf{x}'&=\sideset{^{G'}}{}{\mathop{\textbf{R}_G}}\textbf{x}
+        \simeq (\textbf{I}_3-c\lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times})
+        \left[\begin{array}{c}\textbf{b}_{g}\\\sideset{^G}{}{\mathop{\textbf{v}_{I}}}\\
+            \textbf{b}_{a}\\\sideset{^G}{}{\mathop{\textbf{p}_{I}}}\\
+            \sideset{^G}{}{\mathop{\textbf{p}_{f}}}
+        \end{array}\right]\\
+        &=\textbf{x}-c\lfloor\sideset{^G}{}{\mathop{\bar{\textbf{g}}}}\rfloor_{\times}
+        \left[\begin{array}{c}\textbf{b}_{g}\\\sideset{^G}{}{\mathop{\textbf{v}_{I}}}\\
+            \textbf{b}_{a}\\\sideset{^G}{}{\mathop{\textbf{p}_{I}}}\\
+            \sideset{^G}{}{\mathop{\textbf{p}_{f}}}
+        \end{array}\right]
+        =\textbf{x}-\frac{c}{\lVert\sideset{^G}{}{\mathop{\textbf{g}}}\rVert_2}
+        \left[\begin{array}{c}-\lfloor\textbf{b}_{g}\rfloor_{\times}\textbf{g}\\
+            -\lfloor\sideset{^G}{}{\mathop{\textbf{v}_{I}}}\rfloor_{\times}\textbf{g}\\
+            -\lfloor\textbf{b}_{a}\rfloor_{\times}\textbf{g}\\
+            -\lfloor\sideset{^G}{}{\mathop{\textbf{p}_{I}}}\rfloor_{\times}\textbf{g}\\
+            -\lfloor\sideset{^G}{}{\mathop{\textbf{p}_{f}}}\rfloor_{\times}\textbf{g}
+        \end{array}\right]\\
+    \end{array}
+\end{equation}
+由矩阵$\textbf{N}_R$第2行块矩阵和第4行块矩阵为零，可知IMU的bias是可观的。
+因此对状态量施加绕重力方向的旋转扰动，状态量变化微量为
+\begin{equation}
+    \delta\textbf{x}=-\frac{c}{\lVert\sideset{^G}{}{\mathop{\textbf{g}}}\rVert_2}\textbf{n}_{4}
+\end{equation}
+对应于除了IMU bias之外的所有状态量变化，即$\textbf{n}_4$表示绕重力方向的旋转变化，因此绕重力方向的旋转（yaw角）是不可观的。
+
+\par
+至此，VI-SLAM系统的可观性分析完毕：全局三维平移和绕重力方向旋转yaw角不可观。
+
+
+
+
+
+
+
+
 
 
 
