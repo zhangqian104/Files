@@ -7,86 +7,102 @@
 \usepackage{biblatex}
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{titlesec}
+\usepackage{titletoc}
 
-\title{SLAM系统可观性和一致性分析}
+\title{VI-SLAM系统可观性和一致性分析}
 \author{张谦}
-\date{2020年2月23日}
+\date{2020年03月06日}
 \begin{document}
 \maketitle
+\tableofcontents
+\newpage
+\section{结论}
+（1）对于状态估计问题，并不一定需要保证“无偏估计”，才会得到ATE较小的估计值；如果能保证系统的“一致性”，
+得到更有效的估计值，尽管是“有偏的”，也可能得到ATE较小的估计状态；
+\par
+（2）VI-SLAM系统，不可观维度有4维：全局坐标系下的平移和绕重力方向的旋转（yaw角）；
+状态估计过程中的不可观维度如果和实际不可观维度不等，则会导致系统存在“一致性”问题，进而导致估计误差变大；
+\par
+（3）Robocentric-VIO由于采用robocentric而非world-centric的状态估计方式，能够保证系统不可观维度一直不变，
+进而保证系统的“一致性”，因此可以得到较精确的估计状态。
+
+
 \section{无偏估计、有效性和一致性}
-现实中常常有这样的问题，比如，想知道全体女性的身高
+现实中常常有这样的问题，比如图\ref{figs:heightGaussian}，想知道全体女性的身高
 均值$\mu$，但是没有办法把每个女性都进行测量，只有抽样
 一些女性来估计全体女性的身高：
-\begin{figure}[htbp]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=10cm]{figure1.jpg}
     \caption{身高高斯分布示意图}
+    \label{figs:heightGaussian}
 \end{figure}
 
-那么根据抽样数据怎么进行推断？什么样的推断方法才称为“好”？
+那么根据抽样数据怎么进行推断？什么样的推断方法才称为“好”？$\left[1\right]$
 \subsection{无偏性}
 比如说我们采样到的女性身高分别为：
 \begin{equation}
 \{x_1,x_2,\dots,x_n\}
 \end{equation}
-那么：
+那么，
 \begin{equation}
 \bar{X}=\frac{x_1+x_2+\dots+x_n}{n}
 \end{equation}
-是对$\mu$不错的一个估计，为什么？以为它是无偏估计。\par
+是对$\mu$不错的一个估计，为什么？因为它是无偏估计。\par
 首先，真正的全体女性的身高均值$\mu$，我们是不知道的，只有上帝才知道，在
-图中就画为虚线，通过采样计算出$\bar{X}$会发现，不同采样得到的$\bar{X}$是
-围绕$\mu$左右波动的。这有点像打靶，只要命中在靶心周围，还算不错的成绩，这就是无偏的。
-\begin{figure}[!hbp]
+图2中就画为虚线，通过采样计算出$\bar{X}$会发现，不同采样得到的$\bar{X}$是
+围绕$\mu$左右波动的。这有点像打靶，如图3，只要命中在靶心周围，还算不错的成绩，这就是无偏的。
+
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=10cm]{figure2.jpg}
-    \caption{采样计算$\bar{X}$}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=10cm]{figure3.jpg}
-    \caption{打靶例子}
-\end{figure}
-
-\begin{figure}
-    \begin{minipage}[t]{5cm}
+    \begin{minipage}[t]{4.5cm}
         \centering
-        \includegraphics[width=5cm]{figure2.jpg}
-        \caption{采样计算}
+        \includegraphics[width=4.5cm]{figure2.jpg}
+        \caption{采样计算$\bar{X}$}
+        \label{figs:SmapleExample}
     \end{minipage}
-    \begin{minipage}[t]{5cm}
+    \hspace{1cm}
+    \begin{minipage}[t]{4cm}
         \centering
-        \includegraphics[width=5cm]{figure3.jpg}
-        \caption{采样计算}
+        \includegraphics[width=4cm]{figure3.jpg}
+        \caption{打靶例子}
+        \label{figs:ShotExample1}
+    \end{minipage}
+    \hspace{1cm}
+    \begin{minipage}[t]{6.7cm}
+        \centering
+        \includegraphics[width=6.7cm]{figure4.jpg}
+        \caption{系统偏差}
+        \label{figs:ShotExample2}
     \end{minipage}
 \end{figure}
 
 
-如果用一下式子去估计总体方差$\sigma^2$:
+如果用以下式子去估计总体方差$\sigma^2$:
 \begin{equation}
     S^2=\frac{1}{n}\sum\limits_{i-1}^n{(X_i-\bar{X})^2}
 \end{equation}
 会偏离靶心并产生偏差，这就是有偏的，这个偏差为$\frac{1}{n}\sigma^2$，
-这种偏差就像瞄准镜歪了，属于系统误差，就此而言，无偏估计要好于有偏估计。
-\begin{figure}
-    \centering
-    \includegraphics[width=15cm]{figure4.jpg}
-    \caption{系统偏差}
-\end{figure}
+如图4，这种偏差就像瞄准镜歪了，属于系统误差，就此而言，无偏估计要好于有偏估计。
+
 
 \subsection{有效性}
-打靶的时候，右边的成绩肯定更优秀：
-\begin{figure}[!tbp]
+如图\ref{figs:effective}，打靶的时候，右边的成绩肯定更优秀：
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=15cm]{figure6.jpg}
+    \includegraphics[width=10cm]{figure6.jpg}
     \caption{有效性示意图}
+    \label{figs:effective}
 \end{figure}
 进行估计的时候，也是估计量越靠近目标，效果越好，这个靠近可以用方差来衡量。
-另外，有效估计和偏差性是不想关的。
-\begin{figure}[!tbp]
+另外，如图\ref{figs:effectiveOfbias}有效估计和偏差性是不相关的，无论是有偏估计还是无偏估计，
+均可产生有效估计（方差更小）。
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=15cm]{figure7.jpg}
+    \includegraphics[width=10cm]{figure7.jpg}
+    \caption{无偏和有偏下的有效性}
+    \label{figs:effectiveOfbias}
 \end{figure}
 \par
 举个例子，从$N(\mu,\sigma^2)$中抽出10个样本：
@@ -97,15 +113,17 @@
 \begin{equation}
     T_1=\frac{x_1+x_3+2x_{10}}{4}, T_2=\frac{1}{10}\sum\limits_{i=1}^{10}{x_i}
 \end{equation}
-但是后者比前者方差小，后者更有效。并且显示中不一定非要选无偏估计量，比如:
-\begin{figure}[!tbp]
+但是后者比前者方差小，后者更有效。并且实际系统中不一定非要选无偏估计量，如图\ref{figs:biasAndEffective}
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=15cm]{figure8.jpg}
+    \includegraphics[width=10cm]{figure8.jpg}
+    \caption{无偏性和有效性例子}
+    \label{figs:biasAndEffective}
 \end{figure}
 如果能接受点误差，选择右边这个估计量更好。
 
 \subsection{一致性}
-之前说了，如果用以下式子去估计方差$\sigma^2$:
+如前所述，如果用以下式子去估计方差$\sigma^2$:
 \begin{equation}
     S^2=\frac{1}{n}\sum\limits_{i-1}^n{(X_i-\bar{X})^2}
 \end{equation}
@@ -113,7 +131,7 @@
 这个偏差会越来越小。那么这个估计量就是“一致的”。如果样本数量够多，其实
 这种“有偏”但是“一致'的估计量也是可以选的。
 \subsection{总结}
-在共视的Mapping中，由于fix历史帧，优化滑窗内的关键帧，导致的“有偏”估计，但是由于
+在共视的Mapping中，由于固定历史帧，优化滑窗内的关键帧，导致的“有偏”估计，但是由于
 前端vio能够提供无偏且一致的初值，会提升后端共视非线性优化的“有效性”，而且最终使得
 SLAM能有一个比较精确的输出。
 
@@ -172,8 +190,9 @@ $\ddot{y}=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}\dot{\textbf{x}}=\
     \end{aligned}
 \end{equation}
 其中控制输入$\textbf{u}=\left[u_1,u_2,\ldots, u_l\right]^T$，状态量$\textbf{x}=\left[x_1,x_2.\ldots,x_m\right]^T$，
-状态过程模型表示为向量函数$\textbf{f}_i,i=0,1,\ldots,l$。\par
+状态过程模型表示为向量函数$\textbf{f}_i,i=0,1,\ldots,l$。$\left[3\right]$
 
+\par
 为了分析系统的可观性，以及在现有的测量下状态量各个方向的可观性，我们计算系统的Lie Derivative。定义测量函数$\textbf{h}$的零阶Lie Derivative
 为其自身：
 \begin{equation}
@@ -301,7 +320,7 @@ $\ddot{y}=\frac{\partial(L_\textbf{f}h)}{\partial{\textbf{x}}}\dot{\textbf{x}}=\
 \end{equation}
 因此，矩阵$\Xi$的每一行矩阵块，为系统（\ref{eqs:nonlinearsys2}）的各阶Lie Derivative的生成空间，即矩阵$\Xi$是系统（\ref{eqs:nonlinearsys2}）的可观矩阵。
 \par
-证明结论（\romannumeral2）：由于$\mathcal{O}=\Xi\textbf{B}$，则有$null(\mathcal{O})=null(\textbf{B})+null(\Xi)\cap{range(\textbf{B})}$\cite{Meyer2000}，
+证明结论（\romannumeral2）：由于$\mathcal{O}=\Xi\textbf{B}$，则有$null(\mathcal{O})=null(\textbf{B})+null(\Xi)\cap{range(\textbf{B})}$$\left[2\right]$，
 另外，由于假设条件（C3）系统（\ref{eqs:nonlinearsys2}）是可观的，即可观矩阵$\Xi$为列满秩（full column rank），
 则有$null(\mathcal{O})=null(\textbf{B})$。至此，由假设条件（C1）、（C2）和（C3）得到的结论（\romannumeral1）和（\romannumeral2）证毕。
 \par
@@ -1268,18 +1287,94 @@ $\sideset{^G}{}{\mathop{\textbf{R}_{G'}}}\sideset{^G}{}{\mathop{\bar{\textbf{g}}
 \par
 至此，VI-SLAM系统的可观性分析完毕：全局三维平移和绕重力方向旋转yaw角不可观。
 
+\section{Robocentric VIO可观性和一致性分析}
+在Robocentric VIO中$\left[4\right]$，估计状态表示为
+\begin{eqnarray}
+    \sideset{^{R_k}}{}{\mathop{\textbf{x}_\tau}}
+    =&\left[\sideset{^{R_k}}{}{\mathop{\textbf{x}_G^T}}\ \ \sideset{^{R_k}}{}{\mathop{\textbf{x}_{I_{\tau}}^T}}\right]^T\\
+    \sideset{^{R_k}}{}{\mathop{\textbf{x}_G}}
+    =&\left[\sideset{^{R_k}}{}{\mathop{\textbf{q}_{G}^T}}\ \ \sideset{^{R_k}}{}{\mathop{\textbf{p}_G^T}}
+    \ \ \sideset{^{R_k}}{}{\mathop{\textbf{g}_G^T}}\right]^T\\
+    \sideset{^{R_k}}{}{\mathop{\textbf{x}_{I_{\tau}}^T}}
+    =&\left[\sideset{^{I_\tau}}{}{\mathop{\textbf{q}_{R_k}^T}}\ \ \sideset{^{R_k}}{}{\mathop{\textbf{p}_{I_\tau}}^T}
+    \ \ \sideset{^{R_k}}{}{\mathop{\textbf{v}_{I_\tau}^T}}\ \ \textbf{b}_{g_\tau}^{T}
+    \ \ \textbf{b}_{a_\tau}^{T}\right]^T\\
+\end{eqnarray}
+其中$G$表示固定全局坐标系；$R_k$表示在相机的$t_k$时刻时，IMU的坐标系，同时也是$t_k$时刻robocentric参考系；
+$I_\tau$表示$t_\tau$时刻IMU的坐标系，且$t_\tau\in\left[t_k\ \ t_{k+1}\right]$
 
+\par
+对于线性化的估计器（例如EKF），分析系统的可观性，可利用可观矩阵，
+\begin{equation}
+\textbf{M}=\left[
+    \begin{array}{c}
+        \textbf{H}_{k}\\
+        \textbf{H}_{l}\Phi_{l,k}\\
+        \vdots\\
+        \textbf{H}_{k+m}\Phi_{k+m,k}
+    \end{array}\right]
+\end{equation}
+其中$\textbf{H}_k$为测量雅可比矩阵，$\Phi_{l,k}=\Phi_{l,l-1}\dots\Phi_{k+1,k}$为$k$到$l$的误差状态转移矩阵。
 
+\par
+为简化分析，考虑只有一个地图点的状态$\textbf{x}_k=\left[\sideset{^{R_k}}{}{\mathop{\textbf{x}_k^T}}
+\ \ \sideset{^{R_k}}{}{\mathop{\textbf{p}_L^T}}\right]^T$
+在propagation和update阶段，可观矩阵$\textbf{M}$的每一行$l$块矩阵有如下形式，
+\begin{equation}
+    \textbf{M}_l=\textbf{H}_{l}\Phi_{l,k}
+    =\Pi\left[\textbf{0}_{3},\textbf{0}_{3},\Gamma_{1},\Gamma_2,-\textbf{I}_{3},
+    \Gamma_3,\Gamma_4,\Gamma_5\ \ |\ \ \textbf{I}_{3}\right]
+\end{equation}
+其中$\Gamma_{1},\Gamma_{2},\Gamma_{3},\Gamma_{4},\Gamma_{5}$线性独立，
+则可观矩阵$\textbf{M}$有如下零空间，
+\begin{equation}
+    null(\textbf{M})=\left[
+        \begin{array}{ccc}
+            \textbf{I}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{I}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{I}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{I}_{3}
+        \end{array}\right]
+\end{equation}
 
+在composition阶段，可观矩阵每一行块矩阵$\textbf{M}_l$有如下形式，
+\begin{equation}
+    \textbf{M}_l=\check{\textbf{H}}_{l}\check{\Phi}_{l,k}
+    =\Pi\left[\textbf{0}_{3},\textbf{0}_{3},\check{\Gamma}_{93:94},-\textbf{C}(\sideset{^l}{}{\mathop{\textbf{q}_k}})\ \ 
+    \check{\Gamma}_{96:98}|\ \ \textbf{C}(\sideset{^l}{}{\mathop{\textbf{q}_k}})\right]
+\end{equation}
+其中$\check{\Gamma}_{93},\check{\Gamma}_{94},\check{\Gamma}_{96},\check{\Gamma}_{97},\check{\Gamma}_{98}$线性独立，
+则可观矩阵$\textbf{M}$有如下零空间，
+\begin{equation}
+    null(\textbf{M})=\left[
+        \begin{array}{ccc}
+            \textbf{I}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{I}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{I}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{0}_{3}\\
+            \textbf{0}_3&\textbf{0}_{3}&\textbf{I}_{3}
+        \end{array}\right]
+\end{equation}
 
-
-
-
+\par
+因此，在Robocentric VIO中的各个阶段，可观矩阵的零空间不变，能够保证系统的“一致性”，因此具有较高估计精度。
 
 
 
 \begin{thebibliography}{99}  
+    \bibitem{zhihu}https://www.zhihu.com/question/22983179
     \bibitem{Meyer2000}Meyer CD (2000) Matrix Analysis and Applied Linear Algebra. Philadelphia, PA: SIAM.
+    \bibitem{consistency} Hesch J A, Kottas D G, Bowman S L, et al. Camera-IMU-based localization: Observability analysis and consistency improvement[J]. The International Journal of Robotics Research, 2014, 33(1): 182-201.
+    \bibitem{rvio} Huai Z, Huang G. Robocentric visual-inertial odometry[C]//2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). IEEE, 2018: 6319-6326.
 \end{thebibliography}
 
 
