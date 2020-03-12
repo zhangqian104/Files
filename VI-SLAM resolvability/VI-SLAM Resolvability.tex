@@ -22,7 +22,8 @@
 由VI-SLAM系统可观性分析可知，在给定视觉和IMU观测后，body系的全局平移和重力方向旋转yaw角不可观，
 body系的速度、重力和绝对尺度是可观的。分析VI-SLAM系统初始化时的闭式可解性，亦即分析在一段时间内，
 在不同条件下可观变量的可解性：（1）运动轨迹和状态；（2）地图点数量和观测图像上的分布；（3）相机图像帧数。
-\par
+
+\subsection{几何关系}
 为简化分析，不考虑相机和IMU之间的外参，即假设相机和IMU位姿重合。在该系统中，四元数表示旋转采用Hamilton形式。坐标系约定：全局坐标系用$G$表示，Camera坐标系用$C$表示，
 IMU坐标系用$I$表示，地图点用$f$表示；相机、IMU和地图点表示在某个坐标系下，则该坐标系符号写在对应变量符号的左上角，
 变量标识写在变量符号的右下角，例如$\sideset{^G}{}{\mathop{\mathbf{p}_{I}}}$表示IMU系（body系）原点在全局坐标系中的位置（平移），
@@ -307,9 +308,60 @@ IMU测量相关积分变量，
 
 \par
 至此，VI-SLAM系统初始化的闭式可解性分析，将基于方程组（\ref{eqs:geometryRelation6}）和（\ref{eqs:geometryRelation7}）。
+通过分析矩阵$\Xi$的零空间$\mathcal{N}(\Xi)$，可得到变量$\textbf{X}$的可解情况。
 
+\subsection{基本原理}
+关于VI-SLAM系统解的个数，有如下结论：
+\par
+\textbf{Theorem1：} (a)当矩阵$\Xi$的零空间$\mathcal{N}(\Xi)$为空时，有且仅有1个解；
+(b)当零空间$dim(\mathcal{N}(\Xi))=1$，且对于任意$\textbf{n}\in\mathcal{N}(\Xi),\ \ |\Pi\textbf{n}|\not=0$时，
+有2个解；(c)其他情况，有无数解。
+\par
+证明如下：$(\romannumeral1)$对于结论(a)，显然地利用高斯消元法解方程组，可得到唯一解；$(\romannumeral2)$当$dim(\mathcal{N}(\Xi))=1$时，
+线性方程组（\ref{eqs:geometryRelation6}）有解：$\textbf{X}(\gamma)=\Xi^{-1}\textbf{S}+\gamma\textbf{n}$（左右乘以$\Xi$可验证），
+其中$\Xi^{-1}$为$\Xi$的伪逆，$\textbf{n}$为零空间$\mathcal{N}(\Xi)$的列向量，$\gamma\in\mathbb{R}$为一个未知标量。
+$\gamma$可由式子（\ref{eqs:geometryRelation7}）解得：当$|\Pi\textbf{n}|\not=0$时，$|\Pi\textbf{X}(\gamma)|^2=g^2$
+是关于$\gamma$的二次多项式，因此有两个解$\gamma_1$和$\gamma_2$，对应有两个解$\textbf{X}$，$\textbf{X}_1\triangleq \textbf{X}(\gamma_1)$
+和$\textbf{X}_2\triangleq \textbf{X}(\gamma_2)$；当$|\Pi\textbf{n}|=0$时，$|\Pi\textbf{X}(\gamma)|^2=g^2$与$\gamma$不相关，因此有无数解。
 
-\section{闭式解方程}
+\par
+结合\textbf{Theorem1}可通过分析矩阵$\Xi$的零空间$\mathcal{N}(\Xi)$，得到VI-SLAM系统的可解的情况。
+由于矩阵的每一列乘以一个非零的标量常数，不改变矩阵零空间，为便于分析，将矩阵$\Xi$做如下变形，
+亦即每一列乘以对应的$\lambda_j^i$还原为$\textbf{P}_j^i=\lambda_j^i\mathbf{\mu}_j^i$，得到
+\begin{equation}
+    \Xi'\triangleq \left[\begin{array}{cccccc}
+        \mathcal{M}_2&\mathcal{P}_1&\mathcal{P}_2&\textbf{0}_{3N\times N}&\dots&\textbf{0}_{3N\times N}\\
+        \mathcal{M}_3&\mathcal{P}_1&\textbf{0}_{3N\times N}&\mathcal{P}_3&\dots&\textbf{0}_{3N\times N}\\
+        \dots&\dots&\dots&\dots&\dots&\dots\\
+        \mathcal{M}_M&\mathcal{P}_1&\textbf{0}_{3N\times N}&\textbf{0}_{3N\times N}&\dots&\mathcal{P}_M
+    \end{array}\right]
+\end{equation}
+其中
+\begin{equation}
+    \mathcal{M}_j\triangleq \left[\begin{array}{ccc}
+        \textbf{T}_j&\textbf{K}_j&\Gamma_j\\
+        \textbf{0}_{3\times 3}&\textbf{0}_{3\times 3}&\textbf{0}_{3\times 3}\\
+        \dots&\dots&\dots\\
+        \textbf{0}_{3\times 3}&\textbf{0}_{3\times 3}&\textbf{0}_{3\times 3}
+    \end{array}\right]
+\end{equation}
+\begin{equation}
+    \mathcal{P}_j\triangleq \left[\begin{array}{ccccc}
+        \textbf{P}_j^1&\textbf{0}_{3\times 1}&\textbf{0}_{3\times 1}&\dots&\textbf{0}_{3\times 1}\\
+        \textbf{P}_j^1&\textbf{P}_j^2&\textbf{0}_{3\times 1}&\dots&\textbf{0}_{3\times 1}\\
+        \textbf{P}_j^1&\textbf{0}_{3\times 1}&\textbf{P}_j^3&\dots&\textbf{0}_{3\times 1}\\
+        \dots&\dots&\dots&\dots&\dots\\
+        \textbf{P}_j^1&\textbf{0}_{3\times 1}&\dots&\textbf{0}_{3\times 1}&\textbf{P}_j^N
+    \end{array}\right]
+\end{equation}
+由式子（\ref{eqs:geometryRelation4}）可知$\textbf{P}_j^i-\textbf{P}_1^i,i=1,2,\dots,N$独立于$i$，
+因此令$\mathcal{X}_j\triangleq \textbf{P}_j^i-\textbf{P}_1^i$表征IMU系的运动状态。
+为保证矩阵$\Xi'$的每一列不为零，做如下假设：
+\par
+\textbf{Assumption1:}对于任意$i=1,2,\dots,N,\ \ j=2,\dots,M$，有$\textbf{P}_j^i\not=\textbf{0}_{3\times 1}$。
+
+\par
+接下来，基于上述结论，通过分析矩阵$\Xi'$的零空间，进而分析考虑bias和不考虑bias时，VI-SLAM系统的可解性。
 
 \section{可解性分析：Unbiased Case}
 \subsection{Planar Case}
