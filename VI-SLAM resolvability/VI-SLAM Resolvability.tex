@@ -136,7 +136,7 @@ $\sideset{^G}{}{\mathop{\textbf{v}_{I}}}$表示IMU系在全局坐标系下的速
 且$\sideset{^{I_{in}}}{}{\mathop{\textbf{S}_{I}(t)}}$和$\sideset{^{I_{in}}}{}{\mathop{{\Gamma}_{I}(t)}}$可由加速度计和陀螺仪提供的测量积分得到。
 
 \par
-先假设有N个地图点被同时观测到，$\sideset{^G}{}{\mathop{\textbf{p}_{f_i}}},i=1,\dots,N$，表示在第$t$时刻的相机
+现假设有N个地图点被同时观测到，$\sideset{^G}{}{\mathop{\textbf{p}_{f_i}}},i=1,\dots,N$，表示在第$t$时刻的相机
 坐标系下为$\sideset{^{I_t}}{}{\mathop{\textbf{p}_{f_i}}}$，则有，
 \begin{equation}\label{eqs:mappointInG1}
     \sideset{^G}{}{\mathop{\textbf{p}_{f_i}}}=\sideset{^G}{}{\mathop{\textbf{p}_I}}(t)
@@ -364,9 +364,76 @@ $\gamma$可由式子（\ref{eqs:geometryRelation7}）解得：当$|\Pi\textbf{n}
 接下来，基于上述结论，通过分析矩阵$\Xi'$的零空间，进而分析考虑bias和不考虑bias时，VI-SLAM系统的可解性。
 
 \section{可解性分析：Unbiased Case}
+假设向量$\textbf{n}\in\mathcal{N}(\Xi')$，
+\begin{equation}
+    \textbf{n}\triangleq \left[\mathbf{\alpha}^T,\mathbf{\nu}^T,n_1^1,\dots,n_1^N,
+    n_2^1,\dots,n_2^N,\dots,n_M^1,\dots,n_M^N\right]^T
+\end{equation}
+且有
+\begin{equation}\label{eqs:geometryRelation8}
+    \Xi'\textbf{n}=\textbf{0}_{3(M-1)*N\times 1}
+\end{equation}
+将上式展开得到
+\begin{equation}\label{eqs:geometryRelation8_1}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+(n_1^1+n_j^1)\textbf{P}_1^1+n_j^1\mathcal{X}_j=\textbf{0}_{3\times 1}
+\end{equation}
+\begin{equation}\label{eqs:geometryRelation8_2}
+    (n_1^1+n_j^1)\textbf{P}_1^1+(n_1^i+n_j^i)\textbf{P}_1^i+(n_j^1+n_j^i)\mathcal{X}_j=\textbf{0}_{3\times 1}
+\end{equation}
+
+下面首先分析2D下共面和共线特殊情况，然后再分析3D下各种图像帧数和地图点数量的可解情况。
 \subsection{Planar Case}
+假设所有地图点和相机运动轨迹处在同一平面上，亦即$\textbf{P}_j^i,i=1,\dots,N,j=2,\dots,M$在同一平面上。
+则矩阵$\Xi'$中所有$\textbf{P}_j^i$的某一维可以高斯消元为零：假设所有地图点和相机运动轨迹所在的同一平面
+方程为$Ax+By+Cz+D=0$则$x,y,z$的其中之一可由另外两个变量线性表示。现假设在共面情况下，所有$\textbf{P}_j^i$
+的第三维为零。注意变量$\mathbf{\alpha}$和$\mathbf{\nu}$的第三维不为零，因为公共平面可能为三维空间中的斜平面。
+为方便分析，将系统（\ref{eqs:geometryRelation8}）分为两部分：第一部分为（\ref{eqs:geometryRelation8_1}）
+和（\ref{eqs:geometryRelation8_2}）的第一行和第二行组成的矩阵$\Xi_1^{plane}$，其维度为{\color{red}{$2(M-1)N\times (MN+4)$}}；
+第二部分为（\ref{eqs:geometryRelation8_1}）的第三行组成的矩阵$\Xi_2^{plane}$，其只包含$\mathbf{\alpha}$和
+$\mathbf{\nu}$的第三维，维度为{\color{red}{$(M-1)\times 2$}}。
+\par
+根据\textbf{Theorem1}，
+\par
+(1)当$M\leqslant 2$时，$dim(\mathcal{N}(\Xi_1^{plane}))\geqslant 4$；保证系统具有
+有限个解的先决条件为$M\geqslant 3$。
+\par
+(2)当$M\geqslant 3$时，$dim(\mathcal{N}(\Xi_2^{plane}))=0$；
+\par
+(3)当$M=3$时，矩阵$\Xi_1^{plane}$的维度为$4N\times (3N+4)$；因此为了使$dim(\mathcal{N}(\Xi_1^{plane}))\leqslant 1$,
+至少需要保证$N\geqslant 3$；
+\par
+(4)当$M=4$时，矩阵$\Xi_1^{plane}$的维度为$6N\times (4N+4)$；因此为了使$dim(\mathcal{N}(\Xi_1^{plane}))\leqslant 1$,
+至少需要保证$N\geqslant 2$；
+\par
+(5)当$M\geqslant 5$时，$N$无要求。
 
 \subsection{Linear Case}
+假设所有地图点和相机运动轨迹共线，亦即$\textbf{P}_j^i,i=1,\dots,N,j=2,\dots,M$在同一条线上。则矩阵$\Xi'$中
+所有$\textbf{P}_j^i$的某两维可以高斯消元为零：根据空间直线方程，$\textbf{P}_j^i$任意一维可线性表示另外两维。
+现假设在共线情况下，所有$\textbf{P}_j^i$的第二、三维为零。同样的，为方便分析，
+将系统（\ref{eqs:geometryRelation8}）分为两部分：第一部分为（\ref{eqs:geometryRelation8_1}）
+和（\ref{eqs:geometryRelation8_2}）的第一行组成的矩阵$\Xi_1^{line}$，其维度为{\color{red}{$(M-1)N\times (MN+2)$}}；
+第二部分为（\ref{eqs:geometryRelation8_1}）的第二、三行组成的矩阵$\Xi_2^{line}$，其只包含$\mathbf{\alpha}$和
+$\mathbf{\nu}$的第二、三维，维度为{\color{red}{$2(M-1)\times 4$}}。显然地，$dim(\mathcal{N}(\Xi_1^{line})>2$，
+根据\textbf{Theorem1}，系统在任何条件下，均有无数解。
+\par
+\ 
+\par
+接下来，讨论一般3D情况下的系统可解性。首先给出性质：
+\par
+\textbf{Property1: } (a)当$M\leqslant 2$时，$dim(\mathcal{N}(\Xi'))\geqslant 3$；
+(b)当$M=3$时，$dim(\mathcal{N}(\Xi'))\geqslant 1$；
+(c)当$M\geqslant 4$，且相机匀加速运动时，$dim(\mathcal{N}(\Xi'))\geqslant 1$。
+\par
+证明如下：首先定义一个子系统，
+\begin{equation}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}=-\mathcal{X}_j, j=2,\dots,M
+\end{equation}
+且由其构成的方程组矩阵为$\Xi''$。显然的，$dim(\mathcal{N}(\Xi''))\leqslant dim(\mathcal{N}(\Xi'))$。
+假如变量$\left[\textbf{n}_\mathbf{\alpha}^T,\textbf{n}_\mathbf{\nu}^T\right]^T\in\mathcal{N}(\Xi'')$，
+则由$\mathbf{\alpha}=\textbf{n}_{\mathbf{\alpha}},\mathbf{\nu}=\textbf{n}_{\mathbf{\nu}},n_j^i=0, \forall i,j$
+组成的向量$\textbf{n}\in \mathcal{N}(\Xi')$。
+
 
 \subsection{图像帧数小于等于2}
 

@@ -6,29 +6,29 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {1.2}基本原理}{5}{subsection.1.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2}可解性分析：Unbiased Case}{6}{section.2}% 
+\contentsline {section}{\numberline {2}可解性分析：Unbiased Case}{5}{section.2}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1}Planar Case}{6}{subsection.2.1}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2}Linear Case}{6}{subsection.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3}图像帧数小于等于2}{6}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.3}图像帧数小于等于2}{7}{subsection.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.4}图像帧数等于3}{6}{subsection.2.4}% 
+\contentsline {subsection}{\numberline {2.4}图像帧数等于3}{7}{subsection.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5}图像帧数大于等于4}{6}{subsection.2.5}% 
+\contentsline {subsection}{\numberline {2.5}图像帧数大于等于4}{7}{subsection.2.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.6}Constant Acceleration}{6}{subsection.2.6}% 
+\contentsline {subsection}{\numberline {2.6}Constant Acceleration}{7}{subsection.2.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3}可解性分析：Biased Case}{6}{section.3}% 
+\contentsline {section}{\numberline {3}可解性分析：Biased Case}{7}{section.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}图像帧数小于等于3}{6}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.1}图像帧数小于等于3}{7}{subsection.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}图像帧数等于4}{6}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.2}图像帧数等于4}{7}{subsection.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3}图像帧数大于等于5}{6}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.3}图像帧数大于等于5}{7}{subsection.3.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Gyroscope Bias估计}{6}{section.4}% 
+\contentsline {section}{\numberline {4}Gyroscope Bias估计}{7}{section.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Modified MK闭式解}{6}{section.5}% 
+\contentsline {section}{\numberline {5}Modified MK闭式解}{7}{section.5}% 
 \contentsfinish 
