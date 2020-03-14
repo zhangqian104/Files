@@ -380,6 +380,32 @@ $\gamma$可由式子（\ref{eqs:geometryRelation7}）解得：当$|\Pi\textbf{n}
 \begin{equation}\label{eqs:geometryRelation8_2}
     (n_1^1+n_j^1)\textbf{P}_1^1+(n_1^i+n_j^i)\textbf{P}_1^i+(n_j^1+n_j^i)\mathcal{X}_j=\textbf{0}_{3\times 1}
 \end{equation}
+上面两个式子可通过如下方式验证成立：由式子（\ref{eqs:geometryRelation8_2}）可知，
+\begin{equation}
+    \begin{array}{ll}
+    (n_1^1+n_j^1)\textbf{P}_1^1+n_j^1\mathcal{X}_j
+    &=-(n_1^i+n_j^i)\textbf{P}_1^i-n_j^i\mathcal{X}_j\\
+    &=-(n_1^i+n_j^i)\textbf{P}_1^i-n_j^i(\textbf{P}_j^i-\textbf{P}_1^i)\\
+    &=-n_1^i\textbf{P}_1^i-n_j^i\textbf{P}_1^i-n_j^i\textbf{P}_j^i+n_j^i\textbf{P}_1^i\\
+    &=-n_1^i\textbf{P}_1^i-n_j^i\textbf{P}_j^i
+    \end{array}
+\end{equation}
+由于$\mathcal{X}_j=\textbf{P}_j^i-\textbf{P}_1^i=\textbf{P}_j^1-\textbf{P}_1^1$，因此左式可写为，
+\begin{equation}
+    \begin{array}{ll}
+    (n_1^1+n_j^1)\textbf{P}_1^1+n_j^1\mathcal{X}_j
+    &=(n_1^1+n_j^1)\textbf{P}_1^1+n_j^1(\textbf{P}_j^1-\textbf{P}_1^1)\\
+    &=n_1^1\textbf{P}_1^1+n_j^1\textbf{P}_j^1
+    \end{array}
+\end{equation}
+即有，
+\begin{equation}
+    \begin{array}{c}
+    n_1^1\textbf{P}_1^1+n_j^1\textbf{P}_j^1=-n_1^i\textbf{P}_1^i-n_j^i\textbf{P}_j^i\\
+    \Leftrightarrow
+    n_1^1\textbf{P}_1^1+n_j^1\textbf{P}_j^1+n_1^i\textbf{P}_1^i+n_j^i\textbf{P}_j^i=0
+    \end{array}
+\end{equation}
 
 下面首先分析2D下共面和共线特殊情况，然后再分析3D下各种图像帧数和地图点数量的可解情况。
 \subsection{Planar Case}
@@ -426,18 +452,82 @@ $\mathbf{\nu}$的第二、三维，维度为{\color{red}{$2(M-1)\times 4$}}。�
 (c)当$M\geqslant 4$，且相机匀加速运动时，$dim(\mathcal{N}(\Xi'))\geqslant 1$。
 \par
 证明如下：首先定义一个子系统，
-\begin{equation}
+\begin{equation}\label{eqs:geometryRelation9}
     -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}=-\mathcal{X}_j, j=2,\dots,M
 \end{equation}
-且由其构成的方程组矩阵为$\Xi''$。显然的，$dim(\mathcal{N}(\Xi''))\leqslant dim(\mathcal{N}(\Xi'))$。
+且由其构成的方程组矩阵为$\Xi''$，维度为{\color{red}{$3(M-1)\times 6$}}。显然的，$dim(\mathcal{N}(\Xi''))\leqslant dim(\mathcal{N}(\Xi'))$。
 假如变量$\left[\textbf{n}_\mathbf{\alpha}^T,\textbf{n}_\mathbf{\nu}^T\right]^T\in\mathcal{N}(\Xi'')$，
 则由$\mathbf{\alpha}=\textbf{n}_{\mathbf{\alpha}},\mathbf{\nu}=\textbf{n}_{\mathbf{\nu}},n_j^i=0, \forall i,j$
 组成的向量$\textbf{n}\in \mathcal{N}(\Xi')$。
+\par
+(1)当$M\leqslant 2$时，$dim(\mathcal{N}(\Xi''))\geqslant 3$；
+\par
+(2)当$M=3$时，矩阵$\Xi''$的维度为$6\times 6$，方程组（\ref{eqs:geometryRelation9}）有唯一解$(\mathbf{\alpha}_0,\mathbf{\nu}_0)$；
+对应的，矩阵$\Xi'$由如下零空间，
+\begin{equation}
+    \textbf{n}_0\triangleq \left[\mathbf{\alpha}_0,\mathbf{\nu}_0,\bar{n}_1^1,\dots,\bar{n}_1^i,
+    \dots,\bar{n}_j^1,\dots,\bar{n}_j^i,\dots\right]^T
+\end{equation}
+其中$\bar{n}_1^1=-1,\bar{n}_j^1=1,\bar{n}_1^i=1,\bar{n}_j^i=-1;\ j=2,3;\ i=2,3,\dots,N$。
+即当$M=3$时，$\textbf{n}_0\in \mathcal{N}(\Xi')$，则$dim(\mathcal{N}(\Xi'))\geqslant 1$
+\par
+(3)当$M\geqslant 4$时，系统（\ref{eqs:geometryRelation9}）有解条件为：
+当且仅当$\mathcal{X}_j=\mathbf{\nu}_{0}t_{j}+\frac{1}{2}\mathbf{\alpha}_0t_j^2$，
+亦即对每个$j$，均有$\mathbf{\alpha}=\mathbf{\alpha}_0, \mathbf{\nu}=\mathbf{\nu}_0$。
+此时矩阵$\Xi''$有零空间$\left[\mathbf{\alpha}_0^T,\mathbf{\nu}_0^T\right]^T$，
+进而矩阵$\Xi'$有零空间$\textbf{n}_0$，即$\textbf{n}_0\in \mathcal{N}(\Xi')$，
+对应相机以初速度$\mathbf{\nu}_0$做加速度为$\mathbf{\alpha}_0$的匀加速运动。
 
+\par
+根据\textbf{Theorem1}，为分析系统的有限解情况，需要分析$\textbf{n}_0$是否为矩阵$\Xi'$的唯一零空间向量。
+接下来分不同情况考虑分析。
 
 \subsection{图像帧数小于等于2}
+根据\textbf{Property1}，$dim(\mathcal{N}(\Xi'))\geqslant 3$；由\textbf{Theorem1}可知，系统有无限个解。
 
 \subsection{图像帧数等于3}
+根据\textbf{Property1}，$dim(\mathcal{N}(\Xi'))\geqslant 1$。
+\par
+(1)当$N=1$时，矩阵$\Xi'$的维度为$6\times 9$，因此$dim(\mathcal{N}(\Xi'))\geqslant 3$，系统有无限解。
+\par
+(2)当$N=2$时，矩阵$\Xi'$的维度为$12\times 12$。当且仅当如下两个条件满足时，$dim(\mathcal{N}(\Xi'))=1$：
+(\romannumeral1)对于给定的$j$（例如$j=2$或$j=3$），三个向量$\textbf{P}_1^1,\textbf{P}_1^2,\mathcal{X}_j$
+生成3D空间，即三个向量不在同一平面上；
+(\romannumeral2)对于其他的$j$（例如$j=3$或$j=2$）,$\textbf{P}_j^i$与$\textbf{P}_j^k,\forall i,k=1,2,\dots,N$
+不成比例，即不共线。否则，$dim(\mathcal{N}(\Xi'))\geqslant 1$。
+\par
+证明如下：当（\romannumeral1）不满足时，即三个向量$\textbf{P}_1^1,\textbf{P}_1^2,\mathcal{X}_j$共面；
+由于$N=2$，根据上面Planar Case的讨论，$dim(\mathcal{N}(\Xi'))>1$。现假设条件(\romannumeral1)对于给定的
+$j=2$成立，依据公式(\ref{eqs:geometryRelation8_2})，由于三个向量不共面，即任意一个向量不能被另外两个向量线性表示，
+为使等式成立，则三个向量前的系数为零，可得$n_1^1=n_2^2=-n_2^1=-n_1^2$。
+根据公式(\ref{eqs:geometryRelation8_1})，当$j=2$时，
+可得$-\frac{1}{2}\mathbf{\alpha}t_2^2-t_2\mathbf{\nu}=-n_2^1\mathcal{X}_2$，与系统(\ref{eqs:geometryRelation9})
+类似（用$n_2^1\mathcal{X}_2$代替$\mathcal{X}_2$）。依据公式(\ref{eqs:geometryRelation8_2})，当$j=3$时，取$i=2$，
+\begin{equation}
+    \begin{array}{ll}
+        &\hspace{0.5cm}(n_1^1+n_3^1)\textbf{P}_1^1+(n_1^2+n_3^2)\textbf{P}_1^2+(n_3^1+n_3^2)\mathcal{X}_3=\textbf{0}_{3\times 1}\\
+        &\Leftrightarrow
+        (n_1^1+n_3^1)\textbf{P}_1^1+(n_1^2+n_3^2)\textbf{P}_1^2+(n_1^1+n_3^1+n_1^2+n_3^2)\mathcal{X}_3=\textbf{0}_{3\times 1}\\
+        &\Leftrightarrow
+        (n_1^1+n_3^1)(\textbf{P}_1^1+\mathcal{X}_3)+(n_1^2+n_3^2)(\textbf{P}_1^2+\mathcal{X}_3)=\textbf{0}_{3\times 1}\\
+        &\Leftrightarrow
+        (n_1^1+n_3^1)\textbf{P}_3^1+(n_1^2+n_3^2)\textbf{P}_3^2=\textbf{0}_{3\times 1}\\
+        &\Leftrightarrow
+        (-n_2^1+n_3^1)\textbf{P}_3^1=-(n_2^1+n_3^2)\textbf{P}_3^2
+    \end{array}
+\end{equation}
+其中利用了$n_1^1=-n_2^1=-n_1^2$和$\mathcal{X}_3=\textbf{P}_3^1-\textbf{P}_1^1=\textbf{P}_3^2-\textbf{P}_1^2$。
+当条件(\romannumeral2)成立时，有$\textbf{P}_3^1$和$\textbf{P}_3^2$不共线，则它们前面的系数为零，得到
+$n_3^1=-n_3^2=n_2^1$。
+根据公式(\ref{eqs:geometryRelation8_1})，当$j=3$时，
+可得$-\frac{1}{2}\mathbf{\alpha}t_3^2-t_3\mathbf{\nu}=-n_3^1\mathcal{X}_3=-n_2^1\mathcal{X}_3$，
+与系统(\ref{eqs:geometryRelation9})类似（用$n_2^1\mathcal{X}_3$代替$\mathcal{X}_3$）。
+至此，当$j=2,3$且满足条件(\romannumeral1)和(\romannumeral2)时，系统与(\ref{eqs:geometryRelation9})类似，
+仅仅用$n_2^1\mathcal{X}_j$代替$\mathcal{X}_j$；根据上面讨论，该系统有唯一解，且零空间$\mathcal{N}(\Xi')$
+仅有生成向量$\textbf{n}_0$。根据\textbf{Theorem1}，系统有2个解。
+\par
+综上所述，当$M=3,N\geqslant 2$时，满足相关条件时，VI-SLAM系统有2个解；否则有无数个解。
+
 
 \subsection{图像帧数大于等于4}
 
