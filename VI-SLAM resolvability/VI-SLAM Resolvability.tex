@@ -322,7 +322,8 @@ IMU测量相关积分变量，
 其中$\Xi^{-1}$为$\Xi$的伪逆，$\textbf{n}$为零空间$\mathcal{N}(\Xi)$的列向量，$\gamma\in\mathbb{R}$为一个未知标量。
 $\gamma$可由式子（\ref{eqs:geometryRelation7}）解得：当$|\Pi\textbf{n}|\not=0$时，$|\Pi\textbf{X}(\gamma)|^2=g^2$
 是关于$\gamma$的二次多项式，因此有两个解$\gamma_1$和$\gamma_2$，对应有两个解$\textbf{X}$，$\textbf{X}_1\triangleq \textbf{X}(\gamma_1)$
-和$\textbf{X}_2\triangleq \textbf{X}(\gamma_2)$；当$|\Pi\textbf{n}|=0$时，$|\Pi\textbf{X}(\gamma)|^2=g^2$与$\gamma$不相关，因此有无数解。
+和$\textbf{X}_2\triangleq \textbf{X}(\gamma_2)$；当$|\Pi\textbf{n}|=0$时，$|\Pi\textbf{X}(\gamma)|^2=g^2$与$\gamma$不相关，因此有无数解，
+但此时重力$\textbf{G}$可被唯一解出。
 
 \par
 结合\textbf{Theorem1}可通过分析矩阵$\Xi$的零空间$\mathcal{N}(\Xi)$，得到VI-SLAM系统的可解的情况。
@@ -442,9 +443,8 @@ $\mathbf{\nu}$的第三维，维度为{\color{red}{$(M-1)\times 2$}}。
 第二部分为（\ref{eqs:geometryRelation8_1}）的第二、三行组成的矩阵$\Xi_2^{line}$，其只包含$\mathbf{\alpha}$和
 $\mathbf{\nu}$的第二、三维，维度为{\color{red}{$2(M-1)\times 4$}}。显然地，$dim(\mathcal{N}(\Xi_1^{line})>2$，
 根据\textbf{Theorem1}，系统在任何条件下，均有无数解。
-\par
-\ 
-\par
+
+\newpage
 接下来，讨论一般3D情况下的系统可解性。首先给出性质：
 \par
 \textbf{Property1: } (a)当$M\leqslant 2$时，$dim(\mathcal{N}(\Xi'))\geqslant 3$；
@@ -464,7 +464,7 @@ $\mathbf{\nu}$的第二、三维，维度为{\color{red}{$2(M-1)\times 4$}}。�
 \par
 (2)当$M=3$时，矩阵$\Xi''$的维度为$6\times 6$，方程组（\ref{eqs:geometryRelation9}）有唯一解$(\mathbf{\alpha}_0,\mathbf{\nu}_0)$；
 对应的，矩阵$\Xi'$由如下零空间，
-\begin{equation}
+\begin{equation}\label{eqs:zeroSpace}
     \textbf{n}_0\triangleq \left[\mathbf{\alpha}_0,\mathbf{\nu}_0,\bar{n}_1^1,\dots,\bar{n}_1^i,
     \dots,\bar{n}_j^1,\dots,\bar{n}_j^i,\dots\right]^T
 \end{equation}
@@ -530,10 +530,163 @@ $n_3^1=-n_3^2=n_2^1$。
 
 
 \subsection{图像帧数大于等于4}
+当$M\geqslant 4$时，方程个数大于未知数个数；除了当$M=4,N=1$时，矩阵$\Xi'$的维度为$9\times 10$，
+其零空间维度至少为1维。下面首先分析该特殊情况。
+\par
+(1)当$M=4,N=1$时，当且仅当4个向量$\textbf{P}_1^1,\mathcal{X}_2,\mathcal{X}_3,\mathcal{X}_4$
+生成整个3D空间，即该4个向量不共面时，$dim(\mathcal{N}(\Xi'))=1$。
+\par
+证明如下：假如4个向量共面，根据Planar Case的讨论，由于$N=1$，$dim(\mathcal{N}(\Xi'))>1$。
+下面考虑4个向量不共面，且生成3D空间的情况。根据公式（\ref{eqs:geometryRelation8}）,首先取前6个方程，
+即公式（\ref{eqs:geometryRelation8_1}）中$j=2,3$，可得到$\mathbf{\alpha}$和$\mathbf{\nu}$关于
+$\textbf{P}_1^1,\mathcal{X}_2,\mathcal{X}_3$的线性表示：
+\begin{equation}\label{eqs:j23}
+    \begin{array}{c}
+    \left\{\begin{array}{c}
+        -\frac{1}{2}\mathbf{\alpha}t_2^2-t_2\mathbf{\nu}+(n_1^1+n_2^1)\textbf{P}_1^1+n_2^1\mathcal{X}_2=\textbf{0}_{3\times 1}\\
+        -\frac{1}{2}\mathbf{\alpha}t_3^2-t_3\mathbf{\nu}+(n_1^1+n_3^1)\textbf{P}_1^1+n_3^1\mathcal{X}_3=\textbf{0}_{3\times 1}
+    \end{array}\right.\\
+    \Leftrightarrow
+    \left\{
+    \begin{array}{c}
+        \mathbf{\alpha}=\frac{2}{t_{3}t_2^2-t_{2}t_3^2}
+        \left\{\left[t_{3}(n_1^1+n_2^1)-t_{2}(n_1^1+n_3^1)\right]\textbf{P}_1^1
+        +t_{3}n_2^1\mathcal{X}_2-t_{2}n_3^1\mathcal{X}_3\right\}\\
+        \mathbf{\nu}=\frac{1}{t_{2}t_3^2-t_{3}t_2^2}
+        \left\{\left[t_{3}^{2}(n_1^1+n_2^1)-t_{2}^{2}(n_1^1+n_3^1)\right]\textbf{P}_1^1
+        +t_{3}^{2}n_2^1\mathcal{X}_2-t_{2}^{2}n_3^1\mathcal{X}_3\right\}
+    \end{array}\right.
+    \end{array}
+\end{equation}
+将$\mathbf{\alpha}$和$\mathbf{\nu}$带入到$j=4$的公式（\ref{eqs:geometryRelation8_1}）中，得到
+\begin{equation}\label{eqs:j234}
+    \begin{array}{c}
+        -\frac{1}{2}\mathbf{\alpha}t_4^2-t_4\mathbf{\nu}+(n_1^1+n_4^1)\textbf{P}_1^1+n_4^1\mathcal{X}_4=\textbf{0}_{3\times 1}\\
+        \Leftrightarrow
+        -\frac{t_4^2}{t_{3}t_2^2-t_{2}t_3^2}
+        \left\{\left[t_{3}(n_1^1+n_2^1)-t_{2}(n_1^1+n_3^1)\right]\textbf{P}_1^1
+        +t_{3}n_2^1\mathcal{X}_2-t_{2}n_3^1\mathcal{X}_3\right\}\\
+        -\frac{t_4}{t_{2}t_3^2-t_{3}t_2^2}
+        \left\{\left[t_{3}^{2}(n_1^1+n_2^1)-t_{2}^{2}(n_1^1+n_3^1)\right]\textbf{P}_1^1
+        +t_{3}^{2}n_2^1\mathcal{X}_2-t_{2}^{2}n_3^1\mathcal{X}_3\right\}
+        +(n_1^1+n_4^1)\textbf{P}_1^1+n_4^1\mathcal{X}_4=\textbf{0}_{3\times 1}
+    \end{array}
+\end{equation}
+将上式简写为
+\begin{equation}
+    a_{1}\textbf{P}_1^1+a_2\mathcal{X}_2+a_3\mathcal{X}_3+a_4\mathcal{X}_4=0
+\end{equation}
+其中$a_1,a_2,a_3,a_4$为$n_1^1,n_2^1,n_3^1,n_4^1$的线性表示。
+\par
+由于4个向量$\textbf{P}_1^1,\mathcal{X}_2,\mathcal{X}_3,\mathcal{X}_4$生成3D空间，因此有
+$3\times 4$矩阵$\Xi^*=\left[\textbf{P}_1^1,\mathcal{X}_2,\mathcal{X}_3,\mathcal{X}_4\right]$的零空间
+为1维，假设该零空间向量为$\textbf{a}^*=\left[a_1^*,a_2^*,a_3^*,a_4^*\right]^T$，即有$\Xi^*\textbf{a}^*=0$。
+又由于$a_k^*,k=1,2,3,4$为$n_1^1,n_2^1,n_3^1,n_4^1$的函数，因此考虑如下线性系统，
+\begin{equation}\label{eqs:obssystem1}
+    a_k(n_1^1,n_2^1,n_3^1,n_4^1)=a_k^*, k=1,2,3,4
+\end{equation}
+通过分析方程组$\textbf{A}\textbf{n}=\textbf{a}$中$4\times 4$矩阵$\textbf{A}$的零空间，
+了解线性系统(\ref{eqs:obssystem1})解的情况，其中$\textbf{n}=\left[n_1^1,n_2^1,n_3^1,n_4^1\right]^T$，
+$\textbf{a}=\left[a_1,a_2,a_3,a_4\right]^T$；检查矩阵$\textbf{A}$的行列式,
+\begin{equation}
+    |\textbf{A}|_{det}=-\frac{(t_4-t_3)^{2}(t_4-t_2)^{2}t_4^2}{(t_2-t_3)^{2}t_3^{2}t_2^{2}}
+\end{equation}
+由于$0<t_2<t_3<t_4$，则有$|\textbf{A}|_{det}\not=0$。因此系统(\ref{eqs:obssystem1})有唯一解，
+则有系统$\ref{eqs:geometryRelation8}$有唯一解，进而可知$dim(\mathcal{N}(\Xi'))=1$，
+则VI-SLAM系统有2个解。
+
+\par
+(2)当$M\geqslant 4,N\geqslant 2$时，$dim(\mathcal{N}(\Xi'))=0$，系统有唯一解。证明如下：
+一般而言，对于任意$i=2,\dots,N; j=2,\dots,M$，三个向量$\textbf{P}_1^1,\textbf{P}_1^i,\mathcal{X}_j$
+相互独立，即相互不共线。因此，根据公式（\ref{eqs:geometryRelation8_2}）可得：
+\begin{equation}
+    n_1^1+n_j^1=n_1^i+n_j^i=n_j^1+n_j^i=0, \forall i\geqslant 2, \forall j\geqslant 2
+\end{equation}
+假如$n_1^1\not=0$，且不失一般性，令$n_1^1=1$，则公式（\ref{eqs:geometryRelation8_1}）变为
+\begin{equation}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}=\mathcal{X}_j
+\end{equation}
+显然当$M\geqslant 4$时，上式没法满足每个方程式，除非相机做匀加速运动（该情况后面单独考虑），因此$n_1^1=0$；
+进而有$n_j^i=1, \forall i, \forall j$。根据式子（\ref{eqs:geometryRelation8_1}），
+可知$\mathbf{\alpha}=\mathbf{\nu}=\textbf{0}_{3\times 1}$。因此有矩阵$\Xi'$的零空间为空。
+系统有唯一解。
+
+\par
+(3)当$M\geqslant 5, N=1$时，根据$M=4,N=1$时的讨论，系统$\ref{eqs:geometryRelation8}$有唯一解，
+假设该零空间唯一向量为$\hat{\textbf{n}}_4\triangleq \left[\hat{\mathbf{\alpha}}^T,
+\hat{\mathbf{\nu}}^T,\hat{n}_1^1,\hat{n}_2^1,\hat{n}_3^1,\hat{n}_4^1\right]^T$，
+则有$\hat{\textbf{n}}_4$满足$j=2,3,4$时的公式（\ref{eqs:geometryRelation8_1}）。
+因此，当$M\geqslant 5$时，如果系统(\ref{eqs:geometryRelation8})有解，则该解的前十个元素为零，
+或者等于$\hat{\textbf{n}}_4$。对于$j\geqslant 5$：首先，如果前十个元素为零，则根据公式
+（\ref{eqs:geometryRelation8_1}）可知，
+\begin{equation}
+    n_j^1(\textbf{P}_1^1+\mathcal{X}_j)=\textbf{0}_{3\times 1}
+\end{equation}
+根据\textbf{Assumption1}，可知$n_j^1=0$，则矩阵$\Xi'$的零空间为空。
+其次，如果前十个元素等于$\hat{\textbf{n}}_4$，根据公式（\ref{eqs:geometryRelation8_1}）有，
+\begin{equation}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+(n_1^1+n_j^1)\textbf{P}_1^1+n_j^1\mathcal{X}_j=\textbf{0}_{3\times 1}
+\end{equation}
+该公式一般不成立，理由如下：如果$n_j^1=0$，则有
+\begin{equation}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+n_1^1\textbf{P}_1^1=\textbf{0}_{3\times 1}
+\end{equation}
+对所有$j\geqslant 5$不可能成立；如果$n_j^1\not=0$，则向量$\textbf{P}_1^1+\mathcal{X}_j$必须与向量
+$-\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+n_1^1\textbf{P}_1^1$共线，这种情况一般而言也不成立。
+因此，矩阵$\Xi'$的零空间为空，系统有唯一解。
 
 \subsection{Constant Acceleration}
+当相机做匀加速运动时，
+\begin{equation}\label{eqs:constAcc}
+    \mathcal{X}_j=\mathbf{\nu}_{0}t_j+\frac{1}{2}\mathbf{\alpha}_{0}t_j^2,j=2,\dots,M
+\end{equation}
+其中$\mathbf{\nu}_0$和$\mathbf{\alpha}_0$根据$j=2,3$时系统（\ref{eqs:geometryRelation9}）解出。
+由性质\textbf{Property1}可知，矩阵$\Xi'$零空间至少有1维，且公式（\ref{eqs:zeroSpace}）中的向量
+$\textbf{n}_0\in \mathcal{N}(\Xi')$。
+
+\par
+(1)当相机做匀加速运动时，对于给定的地图点$i$，如果三个向量$\mathbf{\nu}_0,\mathbf{\alpha}_0,\textbf{P}_1^i$
+生成3D空间，即三个向量不在同一平面上；则有$dim(\mathcal{N}(\Xi'))=1$。
+\par
+证明如下：不失一般性，令$i=1$。根据公式（\ref{eqs:geometryRelation8}）前6个方程，亦即$j=2,3$时的公式
+（\ref{eqs:geometryRelation8_1}）,可得同样公式（\ref{eqs:j23}）；同样地，将$\mathbf{\alpha}$和$\mathbf{\nu}$
+带入到$j=4$的公式（\ref{eqs:geometryRelation8_1}）中，得到相同公式（\ref{eqs:j234}）。
+由于$\mathcal{X}_2,\mathcal{X}_3,\mathcal{X}_4$均可由公式（\ref{eqs:constAcc}）中的$\mathbf{\nu}_{0}$
+和$\mathbf{\alpha}_{0}$表示，则有简化公式，
+\begin{equation}
+    a_1\textbf{P}_1^1+a_2\mathbf{\alpha}_{0}+a_3\mathbf{\nu}_{0}=\textbf{0}_{3\times 1}
+\end{equation}
+其中$a_1,a_2,a_3$由$n_1^1,n_2^1,n_3^1,n_4^1$线性表示。由于三个向量$\mathbf{\nu}_0,\mathbf{\alpha}_0,\textbf{P}_1^1$
+生成3D空间，因此有系统
+\begin{equation}
+    a_k(n_1^1,n_2^1,n_3^1,n_4^1)=0, k=1,2,3
+\end{equation}
+该系统$\textbf{A}\textbf{n}=\textbf{0}_{3\times 1}$中$\textbf{A}$为$3\times 4$矩阵，
+$\textbf{n}=\left[n_1^1,n_2^1,n_3^1,n_4^1\right]^T$。通过验证，矩阵$\textbf{A}$的零空间维度为1，
+且该零空间向量有$n_1^1=-1,n_2^1=n_3^1=n_4^1=1$。
+\par
+对于系统公式（\ref{eqs:geometryRelation8_2}），当$i\not=1$时，
+\begin{equation}\label{eqs:constACC1}
+    (n_1^i+n_j^i)\textbf{P}_1^i+(1+n_j^i)(\mathbf{\nu}_{0}t_j+\frac{1}{2}\mathbf{\alpha}_{0}t_j^2)=\textbf{0}_{3\times 1}
+\end{equation}
+由于三个向量$\mathbf{\nu}_0,\mathbf{\alpha}_0,\textbf{P}_1^1$生成3D空间，
+因此$\mathbf{\nu}_0,\mathbf{\alpha}_0$不共线。因此存在某个$j=j^*$，使得向量$\textbf{P}_1^i$与向量
+$\mathbf{\nu}_{0}t_{j^*}+\frac{1}{2}\mathbf{\alpha}_{0}t_{j^*}^2$不共线，由公式(\ref{eqs:constACC1})可得
+$n_{j^*}^i=-1,n_1^i=1$。对于其他$j\not=j^*$，
+\begin{equation}
+    (1+n_j^i)(\textbf{P}_1^i+\mathbf{\nu}_{0}t_j+\frac{1}{2}\mathbf{\alpha}_{0}t_j^2)=\textbf{0}_{3\times 1}
+\end{equation}
+如果$n_j^i\not=-1$，则有$\textbf{P}_1^i=-\mathbf{\nu}_{0}t_j-\frac{1}{2}\mathbf{\alpha}_{0}t_j^2=-\mathcal{X}_j$,
+根据\textbf{Assumption1}，此种情况不成立；因此有$n_j^i=-1$。至此，矩阵$\Xi'$的零空间维度为1，系统有2个解。
+
+\par
+(2)当相机做匀速运动时，即有$|\mathbf{\alpha}|=0$。由于$|\Pi\textbf{n}_0|=|\mathbf{\alpha}_0|=0$，
+根据\textbf{Theorem1}，可知系统有无限个解，但是重力$\textbf{G}$可唯一解出。
 
 \section{可解性分析：Biased Case}
+
+
+
 \subsection{图像帧数小于等于3}
 
 \subsection{图像帧数等于4}
