@@ -129,7 +129,7 @@ $\sideset{^G}{}{\mathop{\textbf{v}_{I}}}$表示IMU系在全局坐标系下的速
     \sideset{^{I_{in}}}{}{\mathop{\textbf{S}_{I}(t)}}=\iint_{t_{in}}^{t}\textbf{C}(\sideset{^{I_{in}}}{}{\mathop{\mathbf{q}_{I}(\tau)}})
     \sideset{^I}{}{\mathop{\mathbf{a}_{m}(\tau)}}d{\tau}^2
 \end{equation}
-\begin{equation}
+\begin{equation}\label{eqs:gammaDefine}
     \sideset{^{I_{in}}}{}{\mathop{{\Gamma}_{I}(t)}}=\iint_{t_{in}}^{t}\textbf{C}(\sideset{^{I_{in}}}{}{\mathop{\mathbf{q}_{I}(\tau)}})
     d{\tau}^2
 \end{equation}
@@ -465,7 +465,7 @@ $\mathbf{\nu}$的第二、三维，维度为{\color{red}{$2(M-1)\times 4$}}。�
 (2)当$M=3$时，矩阵$\Xi''$的维度为$6\times 6$，方程组（\ref{eqs:geometryRelation9}）有唯一解$(\mathbf{\alpha}_0,\mathbf{\nu}_0)$；
 对应的，矩阵$\Xi'$由如下零空间，
 \begin{equation}\label{eqs:zeroSpace}
-    \textbf{n}_0\triangleq \left[\mathbf{\alpha}_0,\mathbf{\nu}_0,\bar{n}_1^1,\dots,\bar{n}_1^i,
+    \textbf{n}_0\triangleq \left[\mathbf{\alpha}_0^T,\mathbf{\nu}_0^T,\bar{n}_1^1,\dots,\bar{n}_1^i,
     \dots,\bar{n}_j^1,\dots,\bar{n}_j^i,\dots\right]^T
 \end{equation}
 其中$\bar{n}_1^1=-1,\bar{n}_j^1=1,\bar{n}_1^i=1,\bar{n}_j^i=-1;\ j=2,3;\ i=2,3,\dots,N$。
@@ -683,13 +683,149 @@ $n_{j^*}^i=-1,n_1^i=1$。对于其他$j\not=j^*$，
 (2)当相机做匀速运动时，即有$|\mathbf{\alpha}|=0$。由于$|\Pi\textbf{n}_0|=|\mathbf{\alpha}_0|=0$，
 根据\textbf{Theorem1}，可知系统有无限个解，但是重力$\textbf{G}$可唯一解出。
 
+\newpage
 \section{可解性分析：Biased Case}
+下面开始讨论加速度计受bias影响时，系统的可解性。显然unbias下的各种条件，在bias下同样需要满足；但另一方面，
+unbias下的各种条件，不足以保证bias下的同样可解性，因此需要定义一些新的条件，以满足bias下的可解性。
+\par
+类似于unbias情况，假设向量$\textbf{n}\in\mathcal{N}(\Xi')$，
+\begin{equation}\label{eqs:zeroSpace1}
+    \textbf{n}\triangleq \left[\mathbf{\alpha}^T,\mathbf{\nu}^T,\textbf{b}^T,n_1^1,\dots,n_1^N,
+    n_2^1,\dots,n_2^N,\dots,n_M^1,\dots,n_M^N\right]^T
+\end{equation}
+其中$\textbf{b}$为$3\times 1$向量，对应于加速度计bias，且有
+\begin{equation}\label{eqs:bias1}
+    \Xi'\textbf{n}=\textbf{0}_{3(M-1)*N\times 1}
+\end{equation}
+将上式展开得到
+\begin{equation}\label{eqs:bias1_1}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+\Gamma_j\textbf{b}
+    +(n_1^1+n_j^1)\textbf{P}_1^1+n_j^1\mathcal{X}_j=\textbf{0}_{3\times 1}
+\end{equation}
+\begin{equation}\label{eqs:bias1_2}
+    (n_1^1+n_j^1)\textbf{P}_1^1+(n_1^i+n_j^i)\textbf{P}_1^i+(n_j^1+n_j^i)\mathcal{X}_j=\textbf{0}_{3\times 1}
+\end{equation}
 
+\par
+为方便分析，首先给出三个性质，并分别证明：
+\par
+\textbf{Property2: }(a)当$M\leqslant 3$时，$dim(\mathcal{N}(\Xi'))\geqslant 3$; 
+(b)当$M=4$时，$dim(\mathcal{N}(\Xi'))\geqslant 1$; 
+(c)当$M\geqslant 5$时，$dim(\mathcal{N}(\Xi'))\geqslant 1$，但需满足如下条件：相机按照特定的方式运动，
+$\mathcal{X}_j=-\frac{1}{2}\mathbf{\alpha}_{0}t_j^2-t_j\mathbf{\nu}_0+\Gamma_j\textbf{b}_0, j\geqslant 5$ 。
+\par
+证明如下：首先定义如下子系统，
+\begin{equation}\label{eqs:bias2}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+\Gamma_j\textbf{b}=-\mathcal{X}_j, j=2,\dots,M
+\end{equation}
+其对应的矩阵为$\Xi''_b$，显然$dim(\mathcal{N}(\Xi''_b))\leqslant dim(\mathcal{N}(\Xi'))$。
+假如向量$\left[\textbf{n}_{\mathbf{\alpha}}^T,\textbf{n}_{\mathbf{\nu}}^T,
+\textbf{n}_{\textbf{b}}^T\right]^T\in \mathcal{N}(\Xi''_b)$，则显然(\ref{eqs:zeroSpace1})中令
+$\mathbf{\alpha}=\textbf{n}_{\mathbf{\alpha}},\mathbf{\nu}=\textbf{n}_{\mathbf{\nu}},
+\textbf{b}=\textbf{n}_{\textbf{b}},n_j^i=0,\forall i,j$，有$\textbf{n}\in \mathcal{N}(\Xi')$。
+\par
+(1)当$M\leqslant 3$时，系统(\ref{eqs:bias2})的方程数量最多6个（$j=2,3$），而未知量有9个，因此
+$dim(\mathcal{N}(\Xi''_b))\geqslant 3$；
+\par
+(2)当$M=4$时，矩阵$\Xi''_b$为$9\times 9$的方阵；如果矩阵$\Xi''_b$的行列式为零，
+则$dim(\mathcal{N}(\Xi''_b))\geqslant 1$；如果矩阵$\Xi''_b$的行列式不为零，则系统(\ref{eqs:bias2})
+有唯一解$(\mathbf{\alpha}_0,\mathbf{\nu}_0,\textbf{b}_0)$;根据公式(\ref{eqs:bias1_1})和(\ref{eqs:bias1_2})，
+令$\mathbf{\alpha}=\mathbf{\alpha}_0,\mathbf{\nu}=\mathbf{\nu}_0,\textbf{b}=\textbf{b}_0,
+n_1^1=n_j^i=-1,n_j^1=n_1^i=1,j=2,3,4,i=2,\dots,N$，则有$\textbf{n}\in \mathcal{N}(\Xi')$，进而
+$dim(\mathcal{N}(\Xi'))\geqslant 1$；
+\par
+(3)当$M\geqslant 5$，且
+$\mathcal{X}_j=-\frac{1}{2}\mathbf{\alpha}_{0}t_j^2-t_j\mathbf{\nu}_0+\Gamma_j\textbf{b}_0$时，
+公式(\ref{eqs:zeroSpace})中的向量$\textbf{n}_0$可表示为，
+\begin{equation}\label{eqs:zeroSpace2}
+    \textbf{n}_0^b\triangleq \left[\mathbf{\alpha}_0^T,\mathbf{\nu}_0^T,\textbf{b}_0^T,\bar{n}_1^1,\dots,\bar{n}_1^i,
+    \dots,\bar{n}_j^1,\dots,\bar{n}_j^i,\dots\right]^T
+\end{equation}
+并且有$\textbf{n}_0^b\in \mathcal{N}(\Xi')$。
 
+\par
+\textbf{Property3: }当相机运动不旋转时，$dim(\mathcal{N}(\Xi'))\geqslant 3$；
+当相机始终绕着单一轴旋转时，$dim(\mathcal{N}(\Xi'))\geqslant 1$。
+\par
+证明如下：
+\par
+(1)当相机运动不旋转时，根据(\ref{eqs:gammaDefine})中$\Gamma_j$的定义，有$\Gamma_j=\frac{1}{2}t_j^2\textbf{I}_3$；
+另外由于$\textbf{T}_j\triangleq -\frac{1}{2}t_j^2\textbf{I}_3$，即矩阵$\Xi'$中第$1\thicksim 3$列和第$7\thicksim 9$列仅相差一个负号，
+因此$dim(\mathcal{N}(\Xi'))\geqslant 3$；
+\par
+(2)当相机绕着单一轴旋转时，不失一般性，假设绕$z$轴旋转，则矩阵$\Xi'$中第3列和第9列仅相差一个符号，至少可构建一个量空间
+向量：其他元素为零，第3列和第9列不为零；因此$dim(\mathcal{N}(\Xi'))\geqslant 1$。
+
+\par
+\textbf{Property4: }(a)当相机绕着单一轴旋转，且$M\geqslant 4$时，$dim(\mathcal{N}(\Xi''_b))=1$；
+(b)当相机绕着至少两个轴旋转，且$M\geqslant 4$时，$dim(\mathcal{N}(\Xi''_b))=0$。
+\par
+证明如下：
+对于子系统(\ref{eqs:bias2}),考虑其连续形式，
+\begin{equation}\label{eqs:bias3}
+    -\frac{1}{2}\mathbf{\alpha}t^2-t\mathbf{\nu}+\Gamma(t)\textbf{b}=-\mathcal{X}(t)
+\end{equation}
+对上式求关于时间$t$的三阶导，得到，
+\begin{equation}
+    \frac{d^3\Gamma(t)}{dt^3}\textbf{b}=-\frac{d^3\mathcal{X}(t)}{dt^3}
+\end{equation}
+根据(\ref{eqs:gammaDefine})中$\Gamma(t)$的定义，以及$t_{in}=0$,
+\begin{equation}
+    \frac{d\textbf{C}}{dt}\textbf{b}=-\frac{d^3\mathcal{X}(t)}{dt^3}
+\end{equation}
+由于$\textbf{C}$为旋转矩阵，则有
+\begin{equation}
+    \frac{d\textbf{C}}{dt}=\lfloor\Omega(t)\rfloor_{\times}\textbf{C}
+\end{equation}
+其中，
+\begin{equation}
+    \lfloor\Omega(t)\rfloor_{\times}\triangleq
+    \left[\begin{array}{ccc}
+        0&-\Omega_z&\Omega_y\\
+        \Omega_z&0&-\Omega_x\\
+        -\Omega_y&\Omega_x&0
+    \end{array}\right]
+\end{equation}
+则有，
+\begin{equation}\label{eqs:rotation}
+    \lfloor\Omega(t)\rfloor_{\times}\textbf{b}'==-\frac{d^3\mathcal{X}(t)}{dt^3}
+\end{equation}
+其中$\textbf{b}'\triangleq \textbf{Cb}$。
+对于非零$\Omega(t)$，系统(\ref{eqs:rotation})的秩为2；因此$\textbf{b}$中的2维可解算出，且为第3维的函数。
+对于系统(\ref{eqs:bias3})，考虑两个不同时刻，则$\mathbf{\alpha}$和$\mathbf{\nu}$可由$\textbf{b}$唯一表示，
+因此有$dim(\mathcal{N}(\Xi''_b))\leqslant 1$；另外由$\textbf{Property3}$可知，$dim(\mathcal{N}(\Xi''_b))\geqslant 1$，
+因此有$dim(\mathcal{N}(\Xi''_b))=1$。
+\par
+当相机绕着至少2个轴旋转时，对于公式(\ref{eqs:rotation})取2个不同时刻，则可确定$\textbf{b}$；
+进一步地，对于系统(\ref{eqs:bias3})在两个不同时刻，则$\mathbf{\alpha}$和$\mathbf{\nu}$可由$\textbf{b}$唯一表示，
+因此有$dim(\mathcal{N}(\Xi''_b))=0$。
 
 \subsection{图像帧数小于等于3}
+根据\textbf{Property2}，当$M\leqslant 3$时，$dim(\mathcal{N}(\Xi'))\geqslant 3$;
+因此VI-SLAM系统有无数解。
 
 \subsection{图像帧数等于4}
+根据\textbf{Property2}，当$M=4$时，$dim(\mathcal{N}(\Xi'))\geqslant 1$; 
+\par
+(1)当$N=1$时，系统有无数个解。证明如下：当$M=4,N=1$时，系统(\ref{eqs:geometryRelation6})中矩阵$\Xi$维度为$9\times 13$，
+显然系统有无数解。
+\par
+(2)当$N\geqslant 2$，且相机至少绕一个轴旋转时，系统有2个解。证明如下：一般而言，三个向量
+$\textbf{P}_1^1,\textbf{P}_1^i,\mathcal{X}_j$对于$i=2,\dots,N; j=2,\dots,M$相互独立，即相互不共线。
+根据公式(\ref{eqs:bias1_2})有$n_1^1+n_j^1=n_1^i+n_j^i=n_j^1+n_j^i=0,\forall i\geqslant 2,\forall j\geqslant 2$。
+如果$n_1^1=0$，则有$n_j^i=0,\forall i,\forall j$; 公式(\ref{eqs:bias1_1})变为，
+\begin{equation}
+    -\frac{1}{2}\mathbf{\alpha}t_j^2-t_j\mathbf{\nu}+\Gamma_j\textbf{b}=\textbf{0}_{3\times 1}
+\end{equation}
+根据\textbf{Property4}，当$n_1^1=0$，且相机仅绕一个轴转动时，矩阵$\Xi'$仅有一个零空间向量$\textbf{n}\in\mathcal{N}(\Xi')$。
+如果$n_1^1\not=0$，公式(\ref{eqs:bias1_1})除以$n_1^1$得到，
+\begin{equation}\label{eqs:bias4}
+    -\frac{t_1^2}{2}\frac{\mathbf{\alpha}}{n_1^1}-t_{j}\frac{\mathbf{\nu}}{n_1^1}+\Gamma_{j}\frac{\textbf{b}}{n_1^1}=\mathcal{X}_j
+\end{equation}
+根据\textbf{Property4}，当相机绕至少两个轴旋转时，系统(\ref{eqs:bias4})有唯一解；当相机绕一个轴旋转，
+或不旋转时，系统(\ref{eqs:bias4})无解。因此当$n_1^1\not=0$且相机绕至少两个轴旋转时，矩阵$\Xi'$有唯一零空间
+$\textbf{n}\in\mathcal{N}(\Xi')$。
+
 
 \subsection{图像帧数大于等于5}
 
@@ -699,7 +835,6 @@ $n_{j^*}^i=-1,n_1^i=1$。对于其他$j\not=j^*$，
 
 
 \begin{thebibliography}{99}  
-    \bibitem{zhihu}https://www.zhihu.com/question/22983179
     \bibitem{Meyer2000}Meyer CD (2000) Matrix Analysis and Applied Linear Algebra. Philadelphia, PA: SIAM.
     \bibitem{consistency} Hesch J A, Kottas D G, Bowman S L, et al. Camera-IMU-based localization: Observability analysis and consistency improvement[J]. The International Journal of Robotics Research, 2014, 33(1): 182-201.
     \bibitem{rvio} Huai Z, Huang G. Robocentric visual-inertial odometry[C]//2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). IEEE, 2018: 6319-6326.

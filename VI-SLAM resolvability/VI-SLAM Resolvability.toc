@@ -22,13 +22,13 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}可解性分析：Biased Case}{10}{section.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}图像帧数小于等于3}{10}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.1}图像帧数小于等于3}{11}{subsection.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}图像帧数等于4}{10}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.2}图像帧数等于4}{11}{subsection.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3}图像帧数大于等于5}{10}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.3}图像帧数大于等于5}{11}{subsection.3.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Gyroscope Bias估计}{10}{section.4}% 
+\contentsline {section}{\numberline {4}Gyroscope Bias估计}{11}{section.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Modified MK闭式解}{10}{section.5}% 
+\contentsline {section}{\numberline {5}Modified MK闭式解}{11}{section.5}% 
 \contentsfinish 
