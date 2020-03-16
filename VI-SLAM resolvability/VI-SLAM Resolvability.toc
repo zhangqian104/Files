@@ -27,8 +27,4 @@
 \contentsline {subsection}{\numberline {3.2}图像帧数等于4}{11}{subsection.3.2}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.3}图像帧数大于等于5}{11}{subsection.3.3}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Gyroscope Bias估计}{11}{section.4}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Modified MK闭式解}{11}{section.5}% 
 \contentsfinish 

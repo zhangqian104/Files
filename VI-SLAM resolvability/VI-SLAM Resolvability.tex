@@ -12,7 +12,7 @@
 
 \title{VI-SLAM系统初始化闭式可解性分析}
 \author{张谦}
-\date{\today}
+\date{2020年3月13日}
 \begin{document}
 \maketitle
 \tableofcontents
@@ -828,16 +828,46 @@ $\textbf{n}\in\mathcal{N}(\Xi')$。
 
 
 \subsection{图像帧数大于等于5}
-
-\section{Gyroscope Bias估计}
-
-\section{Modified MK闭式解}
+(1)当$N=1$时，VI-SLAM系统有无数个解。证明如下：当$M=5,N=1$时，系统(\ref{eqs:geometryRelation6})中未知量
+14维，方程数量为12个，因此系统有无数个解。
+\par
+(2)当$N\geqslant 2$时，若相机绕至少2个轴旋转，则系统有唯一解；若相机绕单一轴旋转，则系统有2个解。
+证明如下：证明过程与$M=4$时的证明过程相同，最终结论如下，当$n_1^1=0$，且相机绕单一轴旋转时，
+有唯一零空间向量$\textbf{n}\in \mathcal{N}{\Xi'}$，则系统有2个解；当$n_1^1\not=0$，矩阵$\Xi'$
+无零空间，因此系统有唯一解。
+\par
+(3)当$M\geqslant 6, N=1$，相机绕至少2个轴旋转时，系统有唯一解。
+证明如下：假如当$M=6$时，矩阵$\Xi'$的零空间为零，则公式(\ref{eqs:bias1_1})对于$M\geqslant 7$变为，
+\begin{equation}
+    n_j^1(\textbf{P}_1^1+\mathcal{X}_j)=\textbf{0}_{3\times 1}
+\end{equation}
+根据\textbf{Assumption1}，$n_j^1=0$。
+现在考虑$M=6$，根据\textbf{Property4}，公式(\ref{eqs:bias1_1})对于$j=2,3,4$，
+向量$\mathbf{\alpha},\mathbf{\nu},\textbf{b}$可用$n_1^1\textbf{P}_1^1,n_2^1\textbf{P}_2^1,
+n_3^1\textbf{P}_3^1,n_4^1\textbf{P}_4^1$线性表示；然后带入$j=5,6$时的公式(\ref{eqs:bias1_1})，
+可得到关于6个未知量$n_j^1,1\leqslant j \leqslant 6$的6个方程，由于该方程组一般而言为满秩，因此有
+$n_j^1=0,1\leqslant j \leqslant 6$。
+\par
+(4)当$M\geqslant 6, N=1$，相机绕单一轴旋转时，系统有2个解。
+证明如下：根据\textbf{Property3}，$dim(\mathcal{N}(\Xi'))\geqslant 1$；另外，对于零空间向量
+$\textbf{n}\in \mathcal{N}(\Xi')$，则$\textbf{n}$的前9维组成的子向量$\textbf{n}'\in \mathcal{N}(\Xi'')$。
+证明矩阵$\Xi'$的零空间为1维，其过程与之前证明相似：对于$M=6$，假如矩阵$\Xi'$的零空间为1维，由于
+$\textbf{n}$的前9维组成的子向量$\textbf{n}'\in \mathcal{N}(\Xi'')$，则对于$j\geqslant 7$公式(\ref{eqs:bias1_1})
+变为
+\begin{equation}
+    n_j^1(\textbf{P}_1^1+\mathcal{X}_j)=\textbf{0}_{3\times 1}
+\end{equation}
+即可知系统仅有1维零空间。当$M=6$时，根据\textbf{Property4}可知向量$\mathbf{\alpha},\mathbf{\nu},\textbf{b}$
+中的8维可由$n_1^1\textbf{P}_1^1,n_2^1\textbf{P}_2^1,n_3^1\textbf{P}_3^1,n_4^1\textbf{P}_4^1$线性表示，
+剩下的最后一维用$\omega$表示。将上述的线性表示带入$j=5,6$时的公式(\ref{eqs:bias1_1}),可得到关于7个未知量
+$n_j^1,1\leqslant j\leqslant 6$和$\omega$的6个方程，一般而言，该系统仅有一维零空间，
+因此矩阵$\Xi'$的零空间为1维，进而VI-SLAM系统有2个解。
 
 
 \begin{thebibliography}{99}  
     \bibitem{Meyer2000}Meyer CD (2000) Matrix Analysis and Applied Linear Algebra. Philadelphia, PA: SIAM.
-    \bibitem{consistency} Hesch J A, Kottas D G, Bowman S L, et al. Camera-IMU-based localization: Observability analysis and consistency improvement[J]. The International Journal of Robotics Research, 2014, 33(1): 182-201.
-    \bibitem{rvio} Huai Z, Huang G. Robocentric visual-inertial odometry[C]//2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). IEEE, 2018: 6319-6326.
+    \bibitem{consistency} Agostino Martinelli. Closed-form solution of visual-inertial structure from motion. International
+    Journal of Computer Vision, Springer Verlag, 2013. ￿hal-00905881
 \end{thebibliography}
 
 
