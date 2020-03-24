@@ -9,6 +9,7 @@
 \usepackage{color}
 \usepackage{titlesec}
 \usepackage{titletoc}
+\usepackage{listings}
 
 \title{代码大全笔记}
 \author{张谦}
@@ -957,7 +958,307 @@ Wicked问题是指那种只能通过解决或部分解决才能被明确的问�
 程序员的一个关键，在于当你开发程序任一部分的代码时，都能安全地忽视程序中尽可能多的其余部分。
 而类就是实现这一目标的首要工具。
 
-\subsection{类的基础：chou}
+\subsection{类的基础：抽象数据类型}
+抽象数据类型（ADT,abstract data type）是指一些数据，以及对这些数据所进行的操作的集合。这些操作，
+既是像程序的其余部分描述了这些数据是怎么样的，也允许程序的其余部分改变这些数据。一个ADT可能是一个图形
+窗体，以及所有能影响该窗体的操作；也可以是一个文件，以及对这个文件进行的操作等等。
+\par
+（1）一个ADT例子：
+\par
+假如你正在写一个程序，控制文本的字体，它能用不用的字型、字号等；如果用一个ADT，就能在相关数据上，
+捆绑一组操作字体的子程序；相关的数据包括字体名称、字号和文字属性等。这些子程序和数据集合，就是
+一个ADT。
+\par
+如果不使用ADT，就只能用一种拼凑的方法来操纵字体了。例如，如果要将字体大小改为12磅(point)，
+即高度为16像素(pixel)，那么就需要这样的代码：
+\par
+currentFont.sizeOnPixels = PointsToPixels(12)
+\par
+\noindent 但不能同时使用currentFont.sizeInPixels和currentFont.sizeInPoints；因为如果你同时使用
+这两项数据成员，currentFont就无从判断到底该用哪个。而且，如果你在程序很多地方都需要修改字体
+大小，那么这类语句就会散步在整个程序中。如果需要把字体设为粗体，或许需要写成这样：
+\par
+currentFont.attribute = CurrentFont.attribute or 0x02 或
+\par
+currentFont.bold = True
+\par
+\noindent 这些做法都存在一个限制，即要求调用方代码，直接控制数据成员，这无疑限制了currentFont的使用。
+
+\par
+（2）使用ADT的好处
+\par
+\begin{itemize}
+    \item 可以隐藏实现细节：把信息隐藏起来，能保护程序的其余部分不受影响。
+    \item 改动不会影响到整个程序：如果数据类型改变，只需在一处修改而不会影响到整个程序。
+    \item 让接口能提供更多信息：把所有相似的操作，都集中到一个ADT中，就可以基于磅数或像素
+    来定义整个接口，或者把二者明确区分开，从而有助于避免混淆。
+    \item 更容易提高性能：如果想提高操作字体时的性能，就可以重新编写出一些更好的子程序，
+    而不用来回修改整个程序。
+    \item 让程序的正确性更显而易见：验证像currentFont.attribute = CurrentFont.attribute or 0x02
+    的语句是否正确，是很枯燥的，可以替换成像currentFont.SetBoldOn()这样的语句，验证它
+    是否正确就更容易一些。
+    \item 程序更具自我说明性：可以改进currentFont.attribute = CurrentFont.attribute or 0x02
+    这样的语句：将0x02换成BOLD，但无论怎么杨修，其可读性都不如currentFont.SetBoldOn()
+    这条语句。
+    \item 无须在程序内到处传递数据：在上面的例子中，必须直接修改currentFont的值，或把它传给
+    每一个要操作字体的子程序；如果使用了ADT，就不用再在程序里到处传递currentFont了。
+    \item 可以像在现实世界中那样操作实体，而不用在底层实现上操作它：可以定义一些针对字体
+    的操作，这样程序的绝大部分，就能完全以“真实世界中的字体”这个概念来操作，而不再用数组访问、结构体
+    定义、True与False等这些底层的实现概念了。
+\end{itemize}
+为了定义一个ADT，只需要定义一些用来控制字体的子程序，例如：
+\par
+currentFont.SetSizeInPoints(sizeInPoints)
+\par
+currentFont.SetSizeInPixels(sizeInPixels)
+\par
+currentFont.SetBoldOn()
+\par
+currentFont.SetBoldOff()
+
+\par
+（3）使用ADT的一些建议：
+\par
+\begin{itemize}
+    \item 把常见的底层数据类型构建为ADT，并使用这些ADT，而不再使用底层数据类型：堆栈、列表、
+    队列，以及几乎所有常见的底层数据类型，都可以用ADT表示；如果堆栈代表的是一组员工，就该把它
+    看作是一些员工，而不是堆栈；如果列表代表一个出场演员名单，就该把它看作是出场演员名单，而不是列表等等。
+    \item 把像文件这样的常用对象当成ADT。
+    \item 简单的事物也可当作ADT：例如，一盏灯只有开和关两种操作，也可以放到ADT里，这样可以
+    提高代码的自我说明能力，并减少需要到处传递的数据。
+    \item 不要让ADT依赖于存储介质：假设有一张保险费率表，它太大了，因此只能保存在磁盘上；
+    你可能编写出rateFile.Read()这样的访问器子程序，然而当你把它当作一个“文件”时，就已经暴露
+    了过多的数据信息，一旦对程序进行修改，把这张表存到内存中，而不是磁盘上，把它当作文件的
+    那些代码将不正确，而且产生误导并使人迷惑。因此，请尽量让类和访问器子程序的名字，与存储数据的方式
+    无关，并只提及抽象数据类型本身，例如rateTable.Read()或更简单rates.Read()。
+\end{itemize}
+
+\subsection{良好的类接口}
+创建高质量的类，第一步，可能也是最重要的一步，就是创建好的接口。这也包括了创建一个可以通过接口来
+展现的合理抽象，并确保细节仍被隐藏在抽象背后。
+\par
+（1）好的抽象：
+\par
+抽象是一种以简化的形式，来看待复杂操作的能力。类的接口为隐藏在其后的具体实现，提供了一种抽象。
+类的接口应能提供一组明显相关的子程序。
+\par
+假设有一个实现雇员(Employee)这一实体的类，其中可能包含雇员的姓名、地址、电话号码等数据，以及一些用
+来初始化并使用雇员的服务子程序，例如：
+\begin{lstlisting}
+    C++示例：展现良好抽象的类接口
+    class Employee {
+    public:
+        // public constructors and destructors
+        Employee();
+        Employee(
+            FullName name,
+            String address,
+            String workPhone,
+            String homePhone,
+            TaxId taxIdNumber,
+            JobClassification jobClass
+        );
+        virtual ~Employee();
+        // public routines
+        FullName GetName() const;
+        String GetAddress() const;
+        String GetWorkPhone() const;
+        String GetHomePhone() const;
+        TaxId GetTaxIdNumber() const;
+        JobClassification GetJobClassification() const;
+        ...
+    private:
+        ...
+    };
+\end{lstlisting}
+在类的内部，还可能会有支持这些服务的其他子程序和数据，但类的使用者，并不需要了解它们；类接口的
+抽象能力非常有价值，因为接口中的每个子程序，都在朝这个一致的目标而工作。
+\par
+一个没有经过良好抽象的类，可能会包含有大量混杂的函数，例如
+\begin{lstlisting}
+    C++示例：展现不良抽象的类接口
+    class Program {
+    public:
+        ...
+        //public routines
+        void InitializeCommandStack();
+        void PushCommand( Command command );
+        Command PopCommand();
+        void ShutdownCommandStack();
+        void InitializeReportFormatting();
+        void FormatReport( Report report );
+        void PrintReport( Report report );
+        void InitializaeGlobalData();
+        void ShutdownGlobalData();
+        ...
+    private:
+        ...
+    };
+\end{lstlisting}
+其中有很多子程序，有用来操作命令栈的，有用来格式化报表的，有用来打印报表的，还有用来初始化全局数据的。
+在命令栈、报表和全局数据之间，很难看出什么联系。类的接口不能展现出一种一致的抽象，因此它的
+内聚性就很弱；应该把这些子程序，重新组织到几个职能更专一的类里去，在这些类的接口中，提供更好的
+抽象。
+\par
+如果这些子程序是一个叫做Program类的一部分，那么可以这样来修改它，以提供一种一致的抽象：
+\begin{lstlisting}
+    C++示例：能更好展现抽象的类接口
+    class Program{
+    public:
+        ...
+        // public routines
+        void InitializeUserInterface();
+        void ShutdownUserInterface();
+        void InitializeReports();
+        void ShubtdownReports();
+        ...
+    private:
+        ...
+    };
+\end{lstlisting}
+在清理这一接口时，将原有的一些子程序，转移到其他更适合的类里面，而把另一些转为InitializeUserInterface()
+和其他子程序中使用的私有子程序。
+\par
+这种对类的抽象进行评估的方法，是基于类所具有的public子程序所构成的集合，即类的接口。即使类的
+整体表现出一种良好的抽象，类内部的子程序也未必都能表现出良好的抽象，也同样要把它们设计得可以表现出
+很好的抽象。
+\par
+一些创建类的抽象接口的指导建议：
+\begin{itemize}
+    \item 类的接口应该展现一致的抽象层次：在设计类的时候，有一种很好的方法，就是把类看作一种
+    用来实现ADT的机制；每一个类应该实现一个ADT，并且仅实现这一个ADT。如果你返现某个类实现了不止
+    一个ADT，或者你不能确定究竟它实现了何种ADT，你就应该把这个类，重新组织为一个或多个定义
+    更加明确的ADT。
+    \begin{lstlisting}
+        C++示例：混合了不同层次抽象的类接口
+        class EmployeeCensus: public ListContainer {
+        public:
+            ...
+            // public routines
+            void AddEmployee( Employee employee );
+            void RemoveEmployee( Employee employee );
+
+            Employee NextItemInList();
+            Employee FirstItem();
+            Employee LastItem();
+            ...
+        private:
+            ...
+        };
+    \end{lstlisting}
+    这个类展现了两个ADT：Employee和ListContainer。出现这种混合的抽象，通常是源于程序员使用容器类
+    或其他类库来实现内部逻辑，但却没有把“使用类库”这一事实隐藏起来。下面是隐藏了实现细节的类接口：
+    \begin{lstlisting}
+        class EmployeeCensus {
+        public:
+            ...
+            // public routines
+            void AddEmployee( Employee employee );
+            void RemoveEmployee( Employee employee );
+            Employee NextEmployee();
+            Employee FirstEmployee();
+            Employee LastEmployee();
+            ...
+        private:
+            ListContainer m_EmployeeList;
+            ...
+        };
+    \end{lstlisting}
+    \item 一定要理解类所实现的抽线是什么：一些类非常像，必须非常仔细地理解类的接口，应该捕捉的
+    抽象到底是哪一个。当你不得不在两个相似的抽象之间做出选择时，请确保你的选择是正确的。
+    \item 提供成对的服务：大多数操作都有和其相应的、相等的以及相反的操作。如果有一个操作用来把
+    灯打开，那很有可能也需要另一个操作，来把灯关闭。在设计类的时候，需要检查每一个public子程序，
+    决定是否需要另一个与其互补的操作。不要盲目地创建相反操作，但你一定要考虑，看看是否需要它。
+    \item 把不相关的信息转移到其他类中：有时你会发现，某个类中，一般子程序使用着该类的一半数据，
+    而另一半子程序则使用另一半数据。这时你其实已经把两个类混在一起使用了，这就需要把它们拆开。
+    \item 尽可能让接口可编程，而不是表达语义：每个接口都由一个可编程的部分和一个语义部分组成。
+    可编程的部分，由接口中的数据类型和其他属性构成，编译器在检查编译错误时，能强制性地要求它们。
+    而语义部分则由“本接口将会被怎样使用”的假定组成，而这些是无法通过编译器来强制实施的。例如，
+    语义接口中包含的考虑“RoutineA必须在RoutineB之前被调用”。语义接口应通过注释说明，但要尽可能
+    让接口不依赖于这些说明。一个接口中任何无法通过编译器强制实施的部分，就是一个可能被误用的
+    部分。要想办法把语义接口的元素，转换为编程接口的元素，比如用断言或其他的技术。
+    \item 谨防在修改时破坏接口的抽象：在对类进行修改和扩展的过程中，常常会发现额外所需的一些功能；
+    这些功能并不十分适应于原有的类接口，可看上去却很难用另一种方法实现。例如，上面的Employee类
+    演变成了下面这个样子：
+    \begin{lstlisting}
+        C++语言示例：在维护时被破坏的类接口
+        class Employee {
+        public:
+            ...
+            // public routines
+            FullName GetName() const;
+            Address GetAddress() const;
+            PhoneNumber GetWorkPhone() const;
+            ...
+            bool IsJobClassificationValid( JobClassification jobClass );
+            bool IsZipCodeValid( Address address );
+            bool IsPhoneNumberValid( PhoneNumber phoneNumber );
+            SqlQuery GetQueryToCreatNewEmployee() const;
+            SqlQuery GetQueryToModifyEmployee() const;
+            SqlQuery GetQUeryToRetrieveEmployee() const;
+            ... 
+        private:
+            ...
+        };
+    \end{lstlisting}
+    前面代码示例中的清晰抽线，现在已经变成了，由一些零散功能组成的大杂烩。在雇员和检查邮政
+    编码、电话号码或职位的子程序之间，并不存在什么逻辑上的关联，那些暴露SQL语句查询细节的子程序，
+    所处的抽象层次比Employee类也要低得多，它们都破坏了Employee类的抽象。
+    \item 不要添加与接口抽象不一致的公用成员：每次你向类的接口中，添加子程序时，问问“这个子程序
+    与现有接口所提供的抽象一致吗”，如果发现不一致，就要换另一种方法来进行修改，以便能保持抽象的
+    完整性。
+    \item 同时考虑抽象性和内聚性：抽象性和内聚性这两个概念之间的关系，非常紧密：一个呈现出很好
+    的抽象的类接口，通常也有很高的内聚性。而具有很强内聚性的类，往往也会呈现为很好的抽象。关注类的
+    接口所表现出来的抽象，比关注类的内聚性更有助于深入地理解类的设计。如果你发现某个类的内聚性很弱，
+    也不知道该怎么改，那就换一种方法，问问你自己这个类是否表现为一致的抽象。
+\end{itemize}
+
+\par
+（2）良好的封装
+\par
+封装是一个比抽象更强的概念。抽象通过提供一个，可以让你忽略实现细节的模型，来管理复杂度；而封装则
+强制阻止你看到细节，即便你想这么做。这两个概念之所以相关，是因为没有封装时，抽象往往很容易被打破。
+依据经验，要么就是封装与抽象两者皆有，要么就是两者皆失。除此之外，没有其他可能。
+\begin{itemize}
+    \item 尽可能地限制类和成员的可访问性：让可访问性尽可能低，是促成封装的原则之一。当你在犹豫
+    某个子程序的可访问性，应该设为public、private还是protected时，经验之举应该采用最严格且可行的
+    访问级别。这是一个很好的指导建议，但还有更重要的建议，即考虑“采用哪种方式，最好地保护接口抽象
+    的完整性？”，如果暴露一个子程序不会让抽象变得不一致的话，这么做就很可能是可行的。如果不
+    确定，那么多隐藏，通常比少隐藏要好。
+    \item 不要公开暴露成员数据：暴露成员数据会破坏封装性，从而限制你对这个抽象的控制能力。例如，一个Point
+    类如果暴露了下面这些成员的话：
+    \begin{lstlisting}
+        float x;
+        float y;
+        float z;
+    \end{lstlisting}
+    它就破坏了封装性，因为调用该类可以自由地使用Point类里面的数据，而Point类却连这些数据什么
+    时候被改动过都不知道。然而，如果Point类暴露的是这些方法的话：
+    \begin{lstlisting}
+        float GetX();
+        float GetY();
+        float GetZ();
+        void SetX(float x);
+        void SetY(float y);
+        void SetZ(float z);
+    \end{lstlisting}
+    那它还是封装完好的。你无法得知底层实现用的是不是float x、y、z，也不会知道Point是不是把这些
+    数据保存为double然后再转换成float，也不可能知道Point是不是把它们保存在月亮上，然后再从
+    外层空间中的卫星上把它们找回来。
+    \item 避免把私有的实现细节放入到类的接口中：做到真正的封装后，程序员们是根本看不到任何实现细节的。
+    无论是在字面上还是在喻意，
+\end{itemize}
+
+
+
+
+
+
+\subsection{有关设计和实现问题}
+
+\subsection{创建类的原因}
+
+\subsection{超越类：包}
 
 \section{高质量的子程序}
 
