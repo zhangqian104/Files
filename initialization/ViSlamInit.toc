@@ -6,10 +6,6 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}方案调研}{2}{section.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}紧耦合闭式解初始化}{2}{subsection.3.1}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}松耦合初始化}{2}{subsection.3.2}% 
-\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4}方案设计}{2}{section.4}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {5}数学原理}{2}{section.5}% 
