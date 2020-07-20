@@ -130,51 +130,77 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {11.3}命名规则的力量}{70}{subsection.11.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {12}基本数据类型}{71}{section.12}% 
+\contentsline {subsection}{\numberline {11.4}非正式命名规则}{70}{subsection.11.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {13}不常见的数据类型}{71}{section.13}% 
+\contentsline {subsection}{\numberline {11.5}标准前缀}{72}{subsection.11.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {14}组织直线型代码}{71}{section.14}% 
+\contentsline {subsection}{\numberline {11.6}创建具备可读性的短名字}{72}{subsection.11.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {15}条件语句}{71}{section.15}% 
+\contentsline {subsection}{\numberline {11.7}应该避免的名字}{73}{subsection.11.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {16}控制循环}{71}{section.16}% 
+\contentsline {section}{\numberline {12}基本数据类型}{74}{section.12}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {17}不常见的控制结构}{71}{section.17}% 
+\contentsline {subsection}{\numberline {12.1}数字使用一般原则}{74}{subsection.12.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {18}表驱动法}{71}{section.18}% 
+\contentsline {subsection}{\numberline {12.2}整数}{74}{subsection.12.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {19}一般控制问题}{71}{section.19}% 
+\contentsline {subsection}{\numberline {12.3}浮点数}{74}{subsection.12.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {20}软件质量概述}{71}{section.20}% 
+\contentsline {subsection}{\numberline {12.4}字符和字符串}{75}{subsection.12.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {21}协同构建}{71}{section.21}% 
+\contentsline {subsection}{\numberline {12.5}布尔变量}{75}{subsection.12.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {22}开发者测试}{71}{section.22}% 
+\contentsline {subsection}{\numberline {12.6}枚举类型}{76}{subsection.12.6}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {23}调试}{71}{section.23}% 
+\contentsline {subsection}{\numberline {12.7}具名常量}{78}{subsection.12.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {24}重构}{71}{section.24}% 
+\contentsline {subsection}{\numberline {12.8}数组}{78}{subsection.12.8}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {25}代码调整策略}{71}{section.25}% 
+\contentsline {subsection}{\numberline {12.9}创建自己地类型（类型别名）}{79}{subsection.12.9}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {26}代码调整技术}{71}{section.26}% 
+\contentsline {section}{\numberline {13}不常见的数据类型}{81}{section.13}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {27}程序规模对构建的影响}{71}{section.27}% 
+\contentsline {section}{\numberline {14}组织直线型代码}{81}{section.14}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {28}管理构建}{71}{section.28}% 
+\contentsline {section}{\numberline {15}条件语句}{81}{section.15}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {29}集成}{71}{section.29}% 
+\contentsline {section}{\numberline {16}控制循环}{81}{section.16}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {30}编程工具}{71}{section.30}% 
+\contentsline {section}{\numberline {17}不常见的控制结构}{81}{section.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {31}布局与风格}{71}{section.31}% 
+\contentsline {section}{\numberline {18}表驱动法}{81}{section.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {32}自说明代码}{71}{section.32}% 
+\contentsline {section}{\numberline {19}一般控制问题}{81}{section.19}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {33}个人性格}{71}{section.33}% 
+\contentsline {section}{\numberline {20}软件质量概述}{81}{section.20}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {34}软件工艺}{71}{section.34}% 
+\contentsline {section}{\numberline {21}协同构建}{81}{section.21}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {35}更多信息}{71}{section.35}% 
+\contentsline {section}{\numberline {22}开发者测试}{81}{section.22}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {23}调试}{81}{section.23}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {24}重构}{81}{section.24}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {25}代码调整策略}{81}{section.25}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {26}代码调整技术}{81}{section.26}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {27}程序规模对构建的影响}{81}{section.27}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {28}管理构建}{81}{section.28}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {29}集成}{81}{section.29}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {30}编程工具}{81}{section.30}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {31}布局与风格}{81}{section.31}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {32}自说明代码}{81}{section.32}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {33}个人性格}{81}{section.33}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {34}软件工艺}{81}{section.34}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {35}更多信息}{81}{section.35}% 
 \contentsfinish 
