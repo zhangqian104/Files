@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  21 JUL 2020 00:04
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  6 AUG 2020 00:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1016,88 +1016,89 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 19.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./CodeComplete.toc [1
 
-] [2])
+] [2] [3])
 \tf@toc=\write5
 \openout5 = `CodeComplete.toc'.
 
- [3]
+ [4]
 File: figure1.png Graphic file (type bmp)
 <figure1.png>
- [4] [5] [6] [7] [8] [9] [10] [11] [12]
+ [5] [6] [7] [8] [9] [10] [11] [12] [13]
 File: figure2.png Graphic file (type bmp)
 <figure2.png>
- [13]
+ [14]
 File: figure3.png Graphic file (type bmp)
 <figure3.png>
 File: figure4.png Graphic file (type bmp)
 <figure4.png>
- [14]
+ [15]
 File: figure5.png Graphic file (type bmp)
 <figure5.png>
- [15]
+ [16]
 File: figure6.png Graphic file (type bmp)
 <figure6.png>
 File: figure7.png Graphic file (type bmp)
 <figure7.png>
- [16]
+ [17]
 File: figure8.png Graphic file (type bmp)
 <figure8.png>
- [17] [18] [19]
+ [18] [19] [20]
 File: figure9.png Graphic file (type bmp)
 <figure9.png>
- [20]
-Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
-Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
  [21]
+Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
+Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
+ [22]
 File: figure10.png Graphic file (type bmp)
 <figure10.png>
- [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38]
+ [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39]
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
- [39] [40] [41] [42] [43] [44] [45] [46] [47] [48] [49] [50]
+ [40] [41] [42] [43] [44] [45] [46] [47] [48] [49] [50] [51]
 File: figure11.PNG Graphic file (type bmp)
 <figure11.PNG>
- [51] [52] [53]
+ [52] [53] [54]
 File: figure12.png Graphic file (type bmp)
 <figure12.png>
- [54]
+ [55]
 File: figure13.PNG Graphic file (type bmp)
 <figure13.PNG>
- [55] [56] [57]
+ [56] [57] [58]
 File: figure14.PNG Graphic file (type bmp)
 <figure14.PNG>
- [58] [59] [60] [61] [62] [63] [64] [65] [66] [67] [68] [69] [70]
+ [59] [60] [61] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71]
 File: figure15.png Graphic file (type bmp)
 <figure15.png>
- [71] [72] [73] [74] [75] [76]
-Overfull \hbox (3.55946pt too wide) in paragraph at lines 3570--3573
-[]\TU/SimSun(0)/m/n/10.53937 定 义 出 枚 举 的 第 一 项 和 最 后 一 项，|  以 便 用 于 循 环 边 界。|  把 枚 举 的 第 一 个 和 最 后 一 个 元 素，|  例 如 定 义 为 \TU/lmr/m/n/10.53937 Country_First\TU/SimSun(0)/m/n/10.53937 ，|
- []
-
-[77] [78] [79] [80]
-Overfull \vbox (64.15736pt too high) has occurred while \output is active []
-
- [81]
+ [72] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82]
+File: figure16.png Graphic file (type bmp)
+<figure16.png>
+ [83] [84] [85]
+File: figure17.png Graphic file (type bmp)
+<figure17.png>
+ [86] [87] [88] [89] [90] [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102]
+File: figure18.png Graphic file (type bmp)
+<figure18.png>
+ [103] [104] [105] [106] [107]
 Missing character: There is no  in font [lmroman10-regular]:mapping=tex-text;!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3780.
- [82]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 3780.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 5050.
+ [108]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 5050.
  (./CodeComplete.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 3780.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3780.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 5050.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 5050.
 Package rerunfilecheck Info: File `CodeComplete.out' has not changed.
-(rerunfilecheck)             Checksum: A06BCD6043CDEFBDA4451D987FC3F064.
+(rerunfilecheck)             Checksum: F64EF0845CE2ADF2524165EBA5873E32.
 Package logreq Info: Writing requests to 'CodeComplete.run.xml'.
 \openout1 = `CodeComplete.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32574 strings out of 494857
- 658275 string characters out of 6175104
+ 32634 strings out of 494857
+ 661372 string characters out of 6175104
  1116675 words of memory out of 5000000
- 36165 multiletter control sequences out of 15000+600000
+ 36222 multiletter control sequences out of 15000+600000
  540512 words of font info for 84 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 54i,6n,68p,818b,1730s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 54i,6n,68p,818b,1733s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on CodeComplete.pdf (82 pages).
+Output written on CodeComplete.pdf (108 pages).
