@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  6 AUG 2020 00:07
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  18 AUG 2020 21:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1078,27 +1078,38 @@ File: figure17.png Graphic file (type bmp)
  [86] [87] [88] [89] [90] [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102]
 File: figure18.png Graphic file (type bmp)
 <figure18.png>
- [103] [104] [105] [106] [107]
+ [103] [104] [105] [106]
+File: figure19.png Graphic file (type bmp)
+<figure19.png>
+ [107]
+File: figure20.png Graphic file (type bmp)
+<figure20.png>
+ [108] [109] [110] [111] [112] [113] [114] [115] [116] [117] [118] [119] [120]
+Underfull \hbox (badness 10000) in paragraph at lines 5689--5695
+
+ []
+
+[121] [122] [123] [124] [125] [126] [127]
 Missing character: There is no  in font [lmroman10-regular]:mapping=tex-text;!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 5050.
- [108]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 5050.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 6063.
+ [128]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 6063.
  (./CodeComplete.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 5050.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 5050.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 6063.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 6063.
 Package rerunfilecheck Info: File `CodeComplete.out' has not changed.
-(rerunfilecheck)             Checksum: F64EF0845CE2ADF2524165EBA5873E32.
+(rerunfilecheck)             Checksum: 320328353D144ED65DF53C2D290B661E.
 Package logreq Info: Writing requests to 'CodeComplete.run.xml'.
 \openout1 = `CodeComplete.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32634 strings out of 494857
- 661372 string characters out of 6175104
+ 32646 strings out of 494857
+ 661542 string characters out of 6175104
  1116675 words of memory out of 5000000
- 36222 multiletter control sequences out of 15000+600000
+ 36232 multiletter control sequences out of 15000+600000
  540512 words of font info for 84 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  54i,6n,68p,818b,1733s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on CodeComplete.pdf (108 pages).
+Output written on CodeComplete.pdf (128 pages).
