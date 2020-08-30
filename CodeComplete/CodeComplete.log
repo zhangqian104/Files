@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  18 AUG 2020 21:12
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2020.3.27)  30 AUG 2020 08:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1016,100 +1016,138 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 19.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./CodeComplete.toc [1
 
-] [2] [3])
+] [2] [3] [4] [5])
 \tf@toc=\write5
 \openout5 = `CodeComplete.toc'.
 
- [4]
+ [6]
 File: figure1.png Graphic file (type bmp)
 <figure1.png>
- [5] [6] [7] [8] [9] [10] [11] [12] [13]
+ [7] [8] [9] [10] [11] [12] [13] [14] [15]
 File: figure2.png Graphic file (type bmp)
 <figure2.png>
- [14]
+ [16]
 File: figure3.png Graphic file (type bmp)
 <figure3.png>
 File: figure4.png Graphic file (type bmp)
 <figure4.png>
- [15]
+ [17]
 File: figure5.png Graphic file (type bmp)
 <figure5.png>
- [16]
+ [18]
 File: figure6.png Graphic file (type bmp)
 <figure6.png>
 File: figure7.png Graphic file (type bmp)
 <figure7.png>
- [17]
+ [19]
 File: figure8.png Graphic file (type bmp)
 <figure8.png>
- [18] [19] [20]
+ [20] [21] [22]
 File: figure9.png Graphic file (type bmp)
 <figure9.png>
- [21]
+ [23]
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
- [22]
+ [24]
 File: figure10.png Graphic file (type bmp)
 <figure10.png>
- [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39]
+ [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41]
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
- [40] [41] [42] [43] [44] [45] [46] [47] [48] [49] [50] [51]
+ [42] [43] [44] [45] [46] [47] [48] [49] [50] [51] [52] [53]
 File: figure11.PNG Graphic file (type bmp)
 <figure11.PNG>
- [52] [53] [54]
+ [54] [55] [56]
 File: figure12.png Graphic file (type bmp)
 <figure12.png>
- [55]
+ [57]
 File: figure13.PNG Graphic file (type bmp)
 <figure13.PNG>
- [56] [57] [58]
+ [58] [59] [60]
 File: figure14.PNG Graphic file (type bmp)
 <figure14.PNG>
- [59] [60] [61] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71]
+ [61] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71] [72] [73]
 File: figure15.png Graphic file (type bmp)
 <figure15.png>
- [72] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82]
+ [74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84]
 File: figure16.png Graphic file (type bmp)
 <figure16.png>
- [83] [84] [85]
+ [85] [86] [87]
 File: figure17.png Graphic file (type bmp)
 <figure17.png>
- [86] [87] [88] [89] [90] [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102]
+ [88] [89] [90] [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102] [103] [104]
 File: figure18.png Graphic file (type bmp)
 <figure18.png>
- [103] [104] [105] [106]
+ [105] [106] [107] [108]
 File: figure19.png Graphic file (type bmp)
 <figure19.png>
- [107]
+ [109]
 File: figure20.png Graphic file (type bmp)
 <figure20.png>
- [108] [109] [110] [111] [112] [113] [114] [115] [116] [117] [118] [119] [120]
+ [110] [111] [112] [113] [114] [115] [116] [117] [118] [119] [120] [121] [122]
 Underfull \hbox (badness 10000) in paragraph at lines 5689--5695
 
  []
 
-[121] [122] [123] [124] [125] [126] [127]
+[123] [124] [125] [126] [127] [128] [129] [130] [131] [132] [133] [134] [135] [136] [137] [138] [139] [140]
+File: figure21.png Graphic file (type bmp)
+<figure21.png>
+ [141] [142] [143] [144]
+File: figure22.png Graphic file (type bmp)
+<figure22.png>
+File: figure23.png Graphic file (type bmp)
+<figure23.png>
+ [145] [146] [147] [148]
+File: figure24.png Graphic file (type bmp)
+<figure24.png>
+File: figure25.png Graphic file (type bmp)
+<figure25.png>
+ [149]
+File: figure26.png Graphic file (type bmp)
+<figure26.png>
+File: figure27.png Graphic file (type bmp)
+<figure27.png>
+ [150]
+File: figure28.png Graphic file (type bmp)
+<figure28.png>
+File: figure29.png Graphic file (type bmp)
+<figure29.png>
+ [151]
+File: figure30.png Graphic file (type bmp)
+<figure30.png>
+File: figure31.png Graphic file (type bmp)
+<figure31.png>
+ [152] [153] [154] [155] [156]
+File: figure32.png Graphic file (type bmp)
+<figure32.png>
+File: figure33.png Graphic file (type bmp)
+<figure33.png>
+ [157]
+File: figure34.png Graphic file (type bmp)
+<figure34.png>
+File: figure35.png Graphic file (type bmp)
+<figure35.png>
+ [158] [159] [160] [161] [162] [163] [164] [165] [166] [167] [168]
 Missing character: There is no  in font [lmroman10-regular]:mapping=tex-text;!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 6063.
- [128]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 6063.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 7939.
+ [169]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 7939.
  (./CodeComplete.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 6063.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 6063.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 7939.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 7939.
 Package rerunfilecheck Info: File `CodeComplete.out' has not changed.
-(rerunfilecheck)             Checksum: 320328353D144ED65DF53C2D290B661E.
+(rerunfilecheck)             Checksum: 51A6057064BE949715E49D1C2441794D.
 Package logreq Info: Writing requests to 'CodeComplete.run.xml'.
 \openout1 = `CodeComplete.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32646 strings out of 494857
- 661542 string characters out of 6175104
+ 32738 strings out of 494857
+ 663929 string characters out of 6175104
  1116675 words of memory out of 5000000
- 36232 multiletter control sequences out of 15000+600000
+ 36309 multiletter control sequences out of 15000+600000
  540512 words of font info for 84 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  54i,6n,68p,818b,1733s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on CodeComplete.pdf (128 pages).
+Output written on CodeComplete.pdf (169 pages).
